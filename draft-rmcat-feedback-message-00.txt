@@ -1,0 +1,410 @@
+
+
+
+IETF RMCAT Working Group                                       Z. Sarker
+Internet-Draft                                               Ericsson AB
+Intended status: Standards Track                           C. S. Perkins
+Expires: December 16, 2016                         University of Glasgow
+                                                           June 16, 2016
+
+      RTP Control Protocol (RTCP) Feedback for Congestion Control
+                  draft-ietf-rmcat-feedback-message-00
+
+Abstract
+
+   This document describes a feedback message needed to perform
+   congestion control for interactive real-time traffic.  This memo is
+   an outcome of the design team formed to analyze feedback requirements
+   of different proposed congestion control solutions in RMCAT WG and
+   design a generic feedback message to ensure interoperability.  This
+   feedback message is designed for a sender based congestion control
+   approach, which means the receiver of the media will send necessary
+   feedback to the sender of the media to do the congestion control at
+   the sender.
+
+Status of this Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on December 16, 2016.
+
+Copyright Notice
+
+   Copyright (c) 2016 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (http://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Simplified BSD License text
+
+
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 1]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+   as described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
+   2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   3.  Feedback Message . . . . . . . . . . . . . . . . . . . . . . .  3
+     3.1.  RTCP Packet format . . . . . . . . . . . . . . . . . . . .  3
+   4.  Feedback Frequency and Overhead  . . . . . . . . . . . . . . .  4
+   5.  Design Rationale . . . . . . . . . . . . . . . . . . . . . . .  5
+   6.  Acknowledgements . . . . . . . . . . . . . . . . . . . . . . .  5
+   7.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  5
+   8.  Security Considerations  . . . . . . . . . . . . . . . . . . .  5
+   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+     9.1.  Normative References . . . . . . . . . . . . . . . . . . .  6
+     9.2.  Informative References . . . . . . . . . . . . . . . . . .  6
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . .  7
+
+1.  Introduction
+
+   For interactive real-time traffic the usual choice of protocol is RTP
+   over UDP. RTP does not provide any guarantee of QoS, reliable or
+   timely delivery and expect underlying transport protocol to do so.
+   UDP certainly does not meet that expectation.  However, RTP provides
+   RTCP and gives a means to periodically send transport metrics to the
+   sender of the media.  For a congestion control algorithm which
+   operates at the sender of the media these RTCP messages are MUST
+   have.  Unfortunately, there is no standard feedback message only for
+   congestion control purpose.  Hence, the congestion control algorithm
+   designers usually come up with own RTCP feedback messages that
+   support their design choice.  This however, does not make them
+   interoperable which can be consider as a barrier for congestion
+   control algorithm evolution and standardization.
+
+   To help achieve interoperability for unicast RTP congestion control,
+   this memo proposes a common RTCP feedback format that can be used by
+   NADA [I-D.ietf-rmcat-nada], SCReAM [I-D.ietf-rmcat-scream-cc], Google
+   Congestion Control [I-D.ietf-rmcat-gcc] and Shared Bottleneck
+   Detection [I-D.ietf-rmcat-sbd], and hopefully also by any future RTP
+   congestion control algorithms.
+
+   In preparing this memo, we have considered the following:
+
+   o  What are the feedback requirements for the proposed RTP congestion
+      control candidate solution?
+
+   o  Can we design a feedback message that is future proof, and general
+      enough to meet the needs of algorithms that have yet to be
+      defined?
+
+   o  Can we use existing RTCP Extended Report (XR) blocks and/or RTCP
+      Feedback Messages?  if not, what are the rationale behind new XR
+      blocks and/or RTCP feedback messages?
+
+Sarker & Perkins       Expires December 16, 2016                [Page 2]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+
+   o  What will be the wire format of the generic feedback message?
+
+   This memo is structured as follows...
+
+2.  Terminology
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+   In addition the terminology defined in [RFC3550], [RFC3551],
+   [RFC3611], [RFC4585], and [RFC5506] applies.
+
+3.  Feedback Message
+
+   The design team analyzed the feedback requirements from the different
+   proposed candidate in RMCAT WG. The analysis showed some
+   commonalities between the proposed solution candidate and some can be
+   derived from other information.  The design team has agreed to have
+   following packet information block in the feedback message to satisfy
+   different requirement analyzed.
+
+   o  Packet Identifier : RTP sequence number.  The RTP packet header
+      includes a incremental packet sequence number that the sender
+      needs to identify packet loss in the transmission.
+
+   o  Packet Arrival Time : Arrival time stamp at the receiver of the
+      media.  The sender requires the arrival time stamp of the
+      respective packet to determine delay and jitter the packet had
+      experienced during transmission.  In a sender based congestion
+      control solution the sender requires to keep track of the sent
+      packets - usually packet sequence number, packet size and packet
+      send time.  With the packet arrival time the sender can detect the
+      delay and jitter information.  Along with packet loss and delay
+      information the sender can estimate the available bandwidth and
+      thus adapt to the situation.
+
+   o  Packet ECN Marking : If ECN [RFC3168], [RFC6679] is used, it is
+      necessary to report on the 2-bit ECN mark in received packets,
+      indicating for each packet whether it is marked not-ECT, ECT(0),
+      ECT(1), or ECN-CE. If the path on which the media traffic
+      traversing is ECN capable then the sender can use the ECN-CE
+      marking information for congestion control.  It is important that
+      receiver send the ECN-CE marking information of the packet back to
+      the sender to take the advantages of ECN marking.  Note that how
+      the receiver gets the ECN marking information at application layer
+      is out of the scope of this design team.
+
+   The feedback messages can have one or more of the above information
+   blocks.  For RTCP based feedback message the packet information block
+   will be grouped by Synchronization Source (SSRC) identifier.
+
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 3]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+3.1.  RTCP Packet format
+
+   The feedback is over RTCP [RFC3550] and is is described as a stand
+   alone RTCP packet for now, suitable for use in regular RTCP reports.
+   [FIXME: this is simply a placeholder for now.  we can desing
+   different wire format of this packet with different efficiency in
+   mind.  This doc will contain a very simple format.  The optimized
+   versions will be discussed in the group and finally the selected will
+   replace the simple format in future]
+
+        0                   1                   2                   3
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |V=2|P|   RC    |       PT      |          length               |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                  SSRC of packet sender                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                 Report Timestamp (32bits)                     |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                  SSRC of 1st media source                     |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |     Sequence number base      |           PckCount            |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |L|ECN|  Arrival time offset    | ...                           .
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       .                                                               .
+       .                                                               .
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                  SSRC of nth media source                     |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |     Sequence number base      |           PckCount            |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |L|ECN|  Arrival time offset    | ...                           .
+       .                                                               .
+       .                                                               .
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   
+
+   where L is a boolean to indicate if the packet was received, ECN is
+   the echoed ECN mark of the packet (00 if not received or if ECN is
+   not used), and the arrival time offset if the relative arrival time
+   of the packet before the report timestamp.
+
+   For each SSRC, there is a sequence number base, followed by PcktCount
+   reports (each 16 bits). Pad to a 32 bit boundary if an odd number of
+   reports are included.
+
+   The above packet format is expressed as an RTCP XR report block when
+   reported with regular RTCP reports.  However, the same block
+   information will need a new RTP/AVPF feedback message if reported
+   more frequently than regular RTCP report.
+
+4.  Feedback Frequency and Overhead
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 4]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+
+   There is a trade-off between speed and accuracy of reporting, and the
+   overhead of the reports.  [I-D.ietf-rmcat-rtp-cc-feedback] discusses
+   this trade-off, and the possible rates of feedback.
+
+   It is a general understanding that the congestion control algorithms
+   will work better with more frequent feedback - per packet feedback.
+   However, RTCP bandwidth and transmission rules put some upper limits
+   on how frequently the RTCP feedback messages can be send from the
+   media receiver to the media sender.  It has been shown [I-D.ietf-
+   rmcat-rtp-cc-feedback] that in most cases a per frame feedback is a
+   reasonable assumption on how frequent the RTCP feedback messages can
+   be transmitted.  The design team also have noted that even if a
+   higher frequency of feedback is desired it is not viable if the
+   feedback messages starts to compete against the media traffic on the
+   feedback path during congestion period.  Analyzing the feedback
+   interval requirement [ref to IETF 95 presentation] it can be seen
+   that the candidate algorithms can perform with a feedback interval
+   range of 50-200ms.  The design team recommends that a 100ms(?
+   [editors note: do we have an agreement here?]) is set by default and
+   a higher or lower value can be negotiated at session setup if needed.
+
+   FIXME: It is likely that this draft can turn into a standards track
+   specification of the feedback packet formats, and refer to [I-D.ietf-
+   rmcat-rtp-cc-feedback] as informational guidelines on how to
+   configure the RTCP reporting interval.  Need to agree if that is the
+   right approach.
+
+5.  Design Rationale
+
+   FIXME: explain, briefly, why a new RTCP feedback message is needed,
+   and why we can't use TMMBR or any of the existing XR blocks or AVPF
+   feedback messages.
+
+6.  Acknowledgements
+
+   This document is an outcome of RMCAT design team discussion.  We
+   would like to thank all participants specially Xiaoquing Zhu, Stefan
+   Holmer, David, Ingemar Johansson, Varun Singh, Randell Jesup and
+   Michael Ramalho for their valuable contribution to the discussions
+   and to the document.
+
+7.  IANA Considerations
+
+   FIXME: this will need to register any new RTCP messages defined
+
+8.  Security Considerations
+
+   FIXME: risk of causing congestion, if an on-path attacker can modify
+   these feedback messages to make conditions appear better than they
+   are.
+
+9.  References
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 5]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+
+9.1.  Normative References
+
+   [I-D.ietf-rmcat-rtp-cc-feedback]
+              Perkins, C., "Using RTP Control Protocol (RTCP) Feedback
+              for Unicast Multimedia Congestion Control", Internet-Draft
+              draft-ietf-rmcat-rtp-cc-feedback-00, July 2014.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+   [RFC3168]  Ramakrishnan, K., Floyd, S. and D. Black, "The Addition of
+              Explicit Congestion Notification (ECN) to IP", RFC 3168,
+              September 2001.
+
+   [RFC3550]  Schulzrinne, H., Casner, S., Frederick, R. and V.
+              Jacobson, "RTP: A Transport Protocol for Real-Time
+              Applications", STD 64, RFC 3550, July 2003.
+
+   [RFC3551]  Schulzrinne, H. and S. Casner, "RTP Profile for Audio and
+              Video Conferences with Minimal Control", STD 65, RFC 3551,
+              July 2003.
+
+   [RFC3611]  Friedman, T., Caceres, R. and A. Clark, "RTP Control
+              Protocol Extended Reports (RTCP XR)", RFC 3611, November
+              2003.
+
+   [RFC4585]  Ott, J., Wenger, S., Sato, N., Burmeister, C. and J. Rey,
+              "Extended RTP Profile for Real-time Transport Control
+              Protocol (RTCP)-Based Feedback (RTP/AVPF)", RFC 4585, July
+              2006.
+
+   [RFC5506]  Johansson, I. and M. Westerlund, "Support for Reduced-Size
+              Real-Time Transport Control Protocol (RTCP): Opportunities
+              and Consequences", RFC 5506, April 2009.
+
+   [RFC6679]  Westerlund, M., Johansson, I., Perkins, C., O'Hanlon, P.
+              and K. Carlberg, "Explicit Congestion Notification (ECN)
+              for RTP over UDP", RFC 6679, August 2012.
+
+9.2.  Informative References
+
+   [I-D.ietf-rmcat-gcc]
+              Holmer, S., Lundin, H., Carlucci, G., Cicco, L. and S.
+              Mascolo, "A Google Congestion Control Algorithm for Real-
+              Time Communication", Internet-Draft draft-ietf-rmcat-
+              gcc-01, October 2015.
+
+   [I-D.ietf-rmcat-nada]
+              Zhu, X., Pan, R., Ramalho, M., Cruz, S., Jones, P., Fu,
+              J., D'Aronco, S. and C. Ganzhorn, "NADA: A Unified
+              Congestion Control Scheme for Real-Time Media", Internet-
+              Draft draft-ietf-rmcat-nada-02, March 2016.
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 6]
+
+Internet-Draft    Congestion Control Feedback in RTCP          June 2016
+
+
+   [I-D.ietf-rmcat-sbd]
+              Hayes, D., Ferlin, S., Welzl, M. and K. Hiorth, "Shared
+              Bottleneck Detection for Coupled Congestion Control for
+              RTP Media.", Internet-Draft draft-ietf-rmcat-sbd-04, March
+              2016.
+
+   [I-D.ietf-rmcat-scream-cc]
+              Johansson, I. and Z. Sarker, "Self-Clocked Rate Adaptation
+              for Multimedia", Internet-Draft draft-ietf-rmcat-scream-
+              cc-01, July 2015.
+
+Authors' Addresses
+
+   Zaheduzzaman Sarker
+   Ericsson AB
+   Luleae,
+   Sweden
+   
+   Phone: +46107173743
+   Email: zaheduzzaman.sarker@ericsson.com
+
+
+   Colin Perkins
+   University of Glasgow
+   School of Computing Science
+   Glasgow, G12 8QQ
+   United Kingdom
+   
+   Email: csp@csperkins.org
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sarker & Perkins       Expires December 16, 2016                [Page 7]
