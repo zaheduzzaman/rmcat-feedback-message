@@ -75,19 +75,20 @@
 
   <middle>
     <section title="Introduction">
-      <t>For interactive real-time traffic the usual choice of protocol is RTP
-      over UDP. RTP does not provide any guarantee of QoS, reliable or timely
-      delivery and expect underlying transport protocol to do so. UDP
-      certainly does not meet that expectation. However, RTP provides RTCP and
-      gives a means to periodically send transport metrics to the sender of
-      the media. For a congestion control algorithm which operates at the
-      sender of the media these RTCP messages are MUST have. Unfortunately,
-      there is no standard feedback message only for congestion control
-      purpose. Hence, the congestion control algorithm designers usually come
-      up with own RTCP feedback messages that support their design choice.
-      This however, does not make them interoperable which can be consider as
-      a barrier for congestion control algorithm evolution and
-      standardization.</t>
+      <t>For interactive real-time traffic the usual choice of protocol is
+      Realtime Transport Protocol (RTP) over User Datagram Protocol (UDP). RTP
+      does not provide any guarantee of Quality of Service (QoS), reliable or
+      timely delivery and expect underlying transport protocol to do so. UDP
+      certainly does not meet that expectation. However, RTP provides RTP
+      Control Protocol (RTCP) and gives a means to periodically send transport
+      metrics to the sender of the media. For a congestion control algorithm
+      which operates at the sender of the media these RTCP messages are MUST
+      have. Unfortunately, there is no standard feedback message only for
+      congestion control purpose. Hence, the congestion control algorithm
+      designers usually come up with own RTCP feedback messages that support
+      their design choice. This however, does not make them interoperable
+      which can be consider as a barrier for congestion control algorithm
+      evolution and standardization.</t>
 
       <t>To help achieve interoperability for unicast RTP congestion control,
       this memo proposes a common RTCP feedback format that can be used by
@@ -97,8 +98,9 @@
       Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully also
       by any future RTP congestion control algorithms.</t>
 
-      <t>In preparing this memo, we have considered the following: <list
-          style="symbols">
+      <t>[Editor's Note: consider removing this part of the section in the
+      later versions ] In preparing this memo, we have considered the
+      following: <list style="symbols">
           <t>What are the feedback requirements for the proposed RTP
           congestion control candidate solution?</t>
 
@@ -111,7 +113,7 @@
           blocks and/or RTCP feedback messages?</t>
 
           <t>What will be the wire format of the generic feedback message?</t>
-        </list> This memo is structured as follows...</t>
+        </list></t>
     </section>
 
     <section title="Terminology">
@@ -150,14 +152,15 @@
           can estimate the available bandwidth and thus adapt to the
           situation.</t>
 
-          <t>Packet ECN Marking : If ECN <xref target="RFC3168"></xref>, <xref
-          target="RFC6679"></xref> is used, it is necessary to report on the
-          2-bit ECN mark in received packets, indicating for each packet
-          whether it is marked not-ECT, ECT(0), ECT(1), or ECN-CE. If the path
-          on which the media traffic traversing is ECN capable then the sender
-          can use the ECN-CE marking information for congestion control. It is
-          important that receiver send the ECN-CE marking information of the
-          packet back to the sender to take the advantages of ECN marking.
+          <t>Packet Explicit Congestion Notification (ECN) Marking : If ECN
+          <xref target="RFC3168"></xref>, <xref target="RFC6679"></xref> is
+          used, it is necessary to report on the 2-bit ECN mark in received
+          packets, indicating for each packet whether it is marked not-ECT,
+          ECT(0), ECT(1), or ECN-CE. If the path on which the media traffic
+          traversing is ECN capable then the sender can use the Congestion
+          Experienced (ECN-CE) marking information for congestion control. It
+          is important that receiver send the ECN-CE marking information of
+          the packet back to the sender to take the advantages of ECN marking.
           Note that how the receiver gets the ECN marking information at
           application layer is out of the scope of this design team.</t>
         </list></t>
@@ -173,7 +176,9 @@
         can desing different wire format of this packet with different
         efficiency in mind. This doc will contain a very simple format. The
         optimized versions will be discussed in the group and finally the
-        selected will replace the simple format in future]</t>
+        selected will replace the simple format in future. This section will
+        describe a new RTP/AVPF transport feedback message and a new RTCP XR
+        block report ]</t>
 
         <t><figure>
             <artwork><![CDATA[
@@ -243,20 +248,48 @@
       50-200ms. The design team recommends that a 100ms(? [editors note: do we
       have an agreement here?]) is set by default and a higher or lower value
       can be negotiated at session setup if needed.</t>
-
-      <t>FIXME: It is likely that this draft can turn into a standards track
-      specification of the feedback packet formats, and refer to <xref
-      target="I-D.ietf-rmcat-rtp-cc-feedback"></xref> as informational
-      guidelines on how to configure the RTCP reporting interval. Need to
-      agree if that is the right approach.</t>
     </section>
 
     <section title="Design Rationale">
-      <t></t>
+      <t>The primary function of RTCP Sender Report (SR) / Receiver Report
+      (RR) is to report the reception quality of media. The regular SR / RR
+      reports contain information about observed jitter, fractional packet
+      loss and cumulative packet loss. These information suppose to help flow
+      and congestion control mechanism. Event though it is possible to do
+      congestion control based on information provided in the SR/RR reports it
+      is not sufficient to design an efficient congestion control algorithm
+      for interactive real-time communication. An efficient congestion control
+      algorithm requires more fine grain information on per packet (see <xref
+      target="feedback_message"></xref>) to react to the congestion or to
+      avoid funder congestion on the path. </t>
 
-      <t>FIXME: explain, briefly, why a new RTCP feedback message is needed,
-      and why we can't use TMMBR or any of the existing XR blocks or AVPF
-      feedback messages.</t>
+      <t>Codec Control Message for AVPF <xref target="RFC5104"></xref> defines
+      Temporary Maximum Media Bit Rate (TMMBR) message which conveys a
+      temporary maximum bitrate limitation from the receiver of the media to
+      the sender of the media. Event though it is not designed to replace
+      congestion control, TMMBR has been used as a means to do receiver based
+      congestion control where the session bandwidth is high enough to send
+      frequent TMMBR messages specially with reduced sized reports <xref
+      target="RFC5506"></xref>. This requires the receiver of the media to
+      analyze the data reception, detect congestion level and recommend a
+      maximum bitrate suitable for current available bandwidth on the path
+      with an assumption that the sender of the media always honors the TMMBR
+      message. This requirement is completely opposite of the sender based
+      congestion control approach. Hence, TMMBR cannot be as a signalling
+      means for a sender based congestion control mechanism. However, TMMBR
+      should be viewed a complimentary signaling mechanism to establish
+      receiver's current view of acceptable maximum bitrate which a sender
+      based congestion control should honor.</t>
+
+      <t>There are number of RTCP eXtended Report (XR) blocks have been
+      defined for reporting of delay, loss and ECN marking. It is possible to
+      combine several XR blocks to report the loss and ECN marking at the cost
+      of overhead and complexity. However, There is no existing RTCP XR block
+      to report packet arrival time. </t>
+
+      <t>Considering the issues discussed here it is rational to design a new
+      congestion control feedback signaling mechanism for sender based
+      congestion control algorithm.</t>
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
@@ -270,13 +303,21 @@
     <!-- Possibly a 'Contributors' section ... -->
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>FIXME: this will need to register any new RTCP messages defined</t>
+      <t></t>
+
+      <section title="RTP/AVPF Transport Layer Feedback Message ">
+        <t>TBD</t>
+      </section>
+
+      <section title="RTCP XR Report Blocks">
+        <t>TBD</t>
+      </section>
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>FIXME: risk of causing congestion, if an on-path attacker can modify
-      these feedback messages to make conditions appear better than they
-      are.</t>
+      <t>Risk of causing congestion, if an on-path attacker can modify these
+      feedback messages to make conditions appear better than they are. More
+      on security consideration TBD.</t>
     </section>
   </middle>
 
@@ -309,6 +350,8 @@
       <?rfc include="reference.I-D.ietf-rmcat-gcc"?>
 
       <?rfc include="reference.I-D.ietf-rmcat-sbd"?>
+
+      <?rfc include='reference.RFC.5104'?>
     </references>
   </back>
 </rfc>
