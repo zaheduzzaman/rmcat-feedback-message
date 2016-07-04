@@ -52,6 +52,20 @@
         <email>csp@csperkins.org</email>
       </address>
     </author>
+    
+    <author fullname="Varun Singh" initials="V." surname="Singh">
+      <organization abbrev="callstats.io">Nemu Dialogue Systems Oy</organization>
+      <address>
+        <postal>
+          <street>Runeberginkatu 4c A 4 </street>
+          <city>Helsinki</city>
+          <code>00100</code>
+          <country>Finland</country>
+        </postal>
+          <email>varun.singh@iki.fi</email>
+        <uri>http://www.callstats.io/</uri>
+      </address>
+    </author>
 
     <date day="16" month="June" year="2016" />
 
@@ -64,39 +78,40 @@
     <abstract>
       <t>This document describes a feedback message needed to perform
       congestion control for interactive real-time traffic. This memo is an
-      outcome of the design team formed to analyze feedback requirements of
-      different proposed congestion control solutions in RMCAT WG and design a
-      generic feedback message to ensure interoperability. This feedback
-      message is designed for a sender based congestion control approach,
-      which means the receiver of the media will send necessary feedback to
-      the sender of the media to do the congestion control at the sender.</t>
+      outcome of the design team. The design team was formed to analyze 
+      feedback requirements from the various congestion control solutions 
+      proposed in the RMCAT WG and design a generic feedback message to 
+      ensure interoperability. The feedback message is designed for a 
+      sender-based congestion control, which means the receiver of the media 
+      will send necessary feedback to the sender of the media to perform 
+      the congestion control at the sender.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>For interactive real-time traffic the usual choice of protocol is
+      <t>For interactive real-time traffic the typical choice of protocol is
       Realtime Transport Protocol (RTP) over User Datagram Protocol (UDP). RTP
       does not provide any guarantee of Quality of Service (QoS), reliable or
-      timely delivery and expect underlying transport protocol to do so. UDP
-      certainly does not meet that expectation. However, RTP provides RTP
-      Control Protocol (RTCP) and gives a means to periodically send transport
-      metrics to the sender of the media. For a congestion control algorithm
-      which operates at the sender of the media these RTCP messages are MUST
-      have. Unfortunately, there is no standard feedback message only for
-      congestion control purpose. Hence, the congestion control algorithm
-      designers usually come up with own RTCP feedback messages that support
-      their design choice. This however, does not make them interoperable
-      which can be consider as a barrier for congestion control algorithm
-      evolution and standardization.</t>
+      timely delivery and expects the underlying transport protocol to do so. 
+      UDP alone certainly does not meet that expectation. However, RTP provides RTP
+      Control Protocol (RTCP) and provides a mechanism to periodically send transport
+      and media metrics to the media sender. For a congestion control algorithm
+      which operates at the media sender, these RTCP messages are important to
+      perform congestion control. Unfortunately, there are currently no 
+      standard feedback message for assisting the congestion control. 
+      Hence, the congestion control algorithm designers usually come up with
+      their new RTCP feedback messages that support their design choice. 
+      This however, does not make them interoperable, which can be considered
+      a barrier for congestion control algorithm evolution and standardization.</t>
 
       <t>To help achieve interoperability for unicast RTP congestion control,
       this memo proposes a common RTCP feedback format that can be used by
       NADA <xref target="I-D.ietf-rmcat-nada"></xref>, SCReAM <xref
       target="I-D.ietf-rmcat-scream-cc"></xref>, Google Congestion Control
       <xref target="I-D.ietf-rmcat-gcc"></xref> and Shared Bottleneck
-      Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully also
-      by any future RTP congestion control algorithms.</t>
+      Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully
+      future RTP congestion control algorithms.</t>
 
       <t>[Editor's Note: consider removing this part of the section in the
       later versions ] In preparing this memo, we have considered the
@@ -170,30 +185,31 @@
       will be grouped by Synchronization Source (SSRC) identifier.</t>
 
       <section title="RTCP Packet format">
-        <t>The feedback is over RTCP <xref target="RFC3550"></xref> and is is
-        described as a stand alone RTCP packet for now, suitable for use in
-        regular RTCP reports. [FIXME: this is simply a placeholder for now. we
-        can desing different wire format of this packet with different
-        efficiency in mind. This doc will contain a very simple format. The
-        optimized versions will be discussed in the group and finally the
-        selected will replace the simple format in future. This section will
-        describe a new RTP/AVPF transport feedback message and a new RTCP XR
-        block report ]</t>
+        <t>
+          The feedback is over RTCP <xref target="RFC3550"></xref> and is is
+          described as a stand alone RTCP packet for now, suitable for use in
+          regular RTCP reports. [FIXME: this is simply a placeholder for now. we
+          can desing different wire format of this packet with different
+          efficiency in mind. This doc will contain a very simple format. The
+          optimized versions will be discussed in the group and finally the
+          selected will replace the simple format in future. This section will
+          describe a new RTP/AVPF transport feedback message and a new RTCP XR
+          block report ]
+        </t>
 
-        <t><figure>
-            <artwork><![CDATA[
+        <t><figure><artwork><![CDATA[
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |V=2|P|   RC    |       PT      |          length               |
+    |    BT=RC2F    |   SSRC count  |      Block Length = TBD       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                  SSRC of packet sender                        |
+    |                        SSRC of Source                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                 Report Timestamp (32bits)                     |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                  SSRC of 1st media source                     |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |     Sequence number base      |           PckCount            |
+    |          begin_seq            |             end_seq           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |L|ECN|  Arrival time offset    | ...                           .
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -202,27 +218,76 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                  SSRC of nth media source                     |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |     Sequence number base      |           PckCount            |
+    |          begin_seq            |             end_seq           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |L|ECN|  Arrival time offset    | ...                           .
+    |L|ECN|  Arrival time offset    | ...                           |
     .                                                               .
     .                                                               .
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-]]></artwork>
-          </figure> where L is a boolean to indicate if the packet was
-        received, ECN is the echoed ECN mark of the packet (00 if not received
-        or if ECN is not used), and the arrival time offset if the relative
-        arrival time of the packet before the report timestamp.</t>
-
-        <t>For each SSRC, there is a sequence number base, followed by
-        PcktCount reports (each 16 bits). Pad to a 32 bit boundary if an odd
-        number of reports are included.</t>
-
-        <t>The above packet format is expressed as an RTCP XR report block
-        when reported with regular RTCP reports. However, the same block
-        information will need a new RTP/AVPF feedback message if reported more
-        frequently than regular RTCP report.</t>
+]]></artwork></figure> 
+      
+        <t>
+          The XR Discard RLE report block uses the same format as specified for the
+          loss and duplicate report blocks in <xref target="RFC3611" />. <xref
+          target="packet-format-rle"/> describes the packet format. The fields
+          "block length", "begin_seq", and "end_seq" have the same semantics and 
+          representation as defined in <xref target="RFC3611" />
+        </t>
+        <t>
+          Block Type (BT, 8 bits): The RMCAT congestion control feedback Report 
+          Block is identified by the constant RC2F.
+        
+          [Note to RFC Editor: Please replace RC2F with the IANA provided
+          RTCP XR block type for this block.]
+        </t>
+       <t>
+          SSRC Count (8 bits): field describes the number of SSRCs reported by 
+          this report block. The number should at least be 1.
+        </t>
+        <t>
+          SSRC of source (32 bits): The SSRC of the RTP source being reported upon 
+          by this report block. This report block MAY report on multiple SSRC
+        </t>
+        <t>
+          Report Timestamp (RTS, 32 bits): represents the timestamp when this report 
+          was generated. [FIXME: It is derived from which clock?]
+        </t>
+        <t> 
+          Each sequence number between the begin_seq and end_seq (both inclusive)
+          is represened by a packet metric block of 16-bits. And contains
+          the L, ECN, and ATO metrics.
+          <t> 
+            L (1 bit): is a boolean to indicate if the packet was received. 
+            0 represents that the packet was not yet received and all the 
+            subsequent bits (ECN and ATO) are also set to 0.  1 represent
+            the packet was received and the subsequent bits in the block 
+            need to be parsed.
+          </t>
+          <t> 
+            ECN (2 bits): is the echoed ECN mark of the packet (00 if not 
+            received or if ECN is not used). </t>
+          <t>
+            Arrival time offset (ATO, 13 bits): it the relative arrival time of the 
+            RTP packets at the receiver before this feedback report was generated 
+            measured in milliseconds. It is calculated by subtracting the reception 
+            timestamp of the RTP packet denoted by this 16bit block and the 
+            timestamp (RTS) of this report. 
+          </t>
+          <t>
+            [FIXME: the timestamp of the RTP packets and the RTS should be same?]
+            [FIXME: needs more information if we go down this path.]
+          </t>
+        </t>
+        <t>
+          Pad to a 32 bit boundary if an odd number of reports are included.
+        </t>
+        <t>
+          The above packet format is expressed as an RTCP XR report block
+          when reported with regular RTCP reports. However, the same block
+          information will need a new RTP/AVPF feedback message if reported more
+          frequently than regular RTCP report.
+        </t>
       </section>
     </section>
 
