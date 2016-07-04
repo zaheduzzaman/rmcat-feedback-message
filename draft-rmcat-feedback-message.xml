@@ -256,7 +256,13 @@
         <t> 
           Each sequence number between the begin_seq and end_seq (both inclusive)
           is represened by a packet metric block of 16-bits. And contains
-          the L, ECN, and ATO metrics.
+          the L, ECN, and ATO metrics. 
+          
+          [FIXME: if an odd number of reports are included, i.e., end_seq - begin_seq is odd
+          OPTION 1:  pad to a 32 bit boundary? how do we mark for padding?
+          OPTION 2:  just report on higher than received RTP packet. 
+          In both cases the 16bits are set to zero.]
+          
           <t> 
             L (1 bit): is a boolean to indicate if the packet was received. 
             0 represents that the packet was not yet received and all the 
@@ -278,9 +284,6 @@
             [FIXME: the timestamp of the RTP packets and the RTS should be same?]
             [FIXME: needs more information if we go down this path.]
           </t>
-        </t>
-        <t>
-          Pad to a 32 bit boundary if an odd number of reports are included.
         </t>
         <t>
           The above packet format is expressed as an RTCP XR report block
