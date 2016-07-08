@@ -376,11 +376,11 @@
       maximum bitrate suitable for current available bandwidth on the path
       with an assumption that the sender of the media always honors the TMMBR
       message. This requirement is completely opposite of the sender based
-      congestion control approach. Hence, TMMBR cannot be as a signalling
-      means for a sender based congestion control mechanism. However, TMMBR
-      should be viewed a complimentary signaling mechanism to establish
-      receiver's current view of acceptable maximum bitrate which a sender
-      based congestion control should honor.</t>
+      congestion control approach. Hence, TMMBR cannot be as a signaling means
+      for a sender based congestion control mechanism. However, TMMBR should
+      be viewed a complimentary signaling mechanism to establish receiver's
+      current view of acceptable maximum bitrate which a sender based
+      congestion control should honor.</t>
 
       <t>There are number of RTCP eXtended Report (XR) blocks have been
       defined for reporting of delay, loss and ECN marking. It is possible to
