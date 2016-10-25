@@ -230,14 +230,15 @@
       time at the receiver (e.g., socket or RTP API) should be recorded at the
       earliest opportunity available to the receiver.</t>
 
-      <section title="RTCP XR Block for Reporting Congestion Control Feedback" anchor="sec:xr">
-        <t>Congestion control feedback can be sent as part of a scheduled
-        RTCP report, or as RTP/AVPF early feedback. If sent as part of a
-        scheduled RTCP report, the feedback is sent as an XR block, as 
-        part of a regular compound RTCP packet. The format of the RTCP XR 
-        report block is as follows (this will be preceded in the compound
-        RTCP packet by an RTCP XR header, described in <xref target="RFC3611"/>,
-        that includes the SSRC of the report sender):</t>
+      <section anchor="sec:xr"
+               title="RTCP XR Block for Reporting Congestion Control Feedback">
+        <t>Congestion control feedback can be sent as part of a scheduled RTCP
+        report, or as RTP/AVPF early feedback. If sent as part of a scheduled
+        RTCP report, the feedback is sent as an XR block, as part of a regular
+        compound RTCP packet. The format of the RTCP XR report block is as
+        follows (this will be preceded in the compound RTCP packet by an RTCP
+        XR header, described in <xref target="RFC3611"></xref>, that includes
+        the SSRC of the report sender):</t>
 
         <t><figure>
             <artwork><![CDATA[
@@ -284,17 +285,20 @@
         by this report block. The number should at least be 1.</t>
 
         <t>Report Timestamp (RTS, 32 bits): represents the timestamp when this
-        report was generated. [FIXME: It is derived from which clock?]</t>
+        report was generated. The sender of the feedback message decides on
+        the wall-clock. Usually, it should be derived from the same wall-clock
+        that is used for timestamping RTP packets arrival . Consistency in the
+        unit and resolution (10th of millisecond should be good enough ) is
+        important here. In addition, the media sender can ask for a specific
+        resolution it wants.</t>
 
         <t>Each sequence number between the begin_seq and end_seq (both
         inclusive) is represented by a packet metric block of 16-bits that
-        contains the L, ECN, and ATO metrics. [FIXME: if an odd number of
-        reports are included, i.e., end_seq - begin_seq is odd OPTION 1: pad
-        to a 32 bit boundary? How do we mark for padding? OPTION 2: just
-        report on higher than received RTP packet. In both cases the 16bits
-        are set to zero. OPTION 3: "MUST report on an even number of packets". 
-        A short note on modulo operations for the sequence
-        number may be made here?]</t>
+        contains the L, ECN, and ATO metrics. If an odd number of reports are
+        included, i.e., end_seq - begin_seq is odd then it should be rounded
+        up to four (4) bytes boundary. [FIXME : the solution will depend on
+        the compression used (if any), revisit this if packet format is
+        changed later] </t>
 
         <t>L (1 bit): is a boolean to indicate if the packet was received. 0
         represents that the packet was not yet received and all the subsequent
@@ -310,21 +314,19 @@
         the reception timestamp of the RTP packet denoted by this 16bit block
         and the timestamp (RTS) of this report.</t>
 
-        <t>[FIXME: Should the timestamp of the RTP packets and the RTS be
-        same? Needs more information if we go down this path.] [FIXME: should
-        reserve 0xFFF to mean anything greater than 0xFFE.]</t>
+        <t>[FIXME: should reserve 0xFFF to mean anything greater than 0xFFE?
+        This needs to wait until we have fixed the packet format ]</t>
       </section>
 
-      <section title="RTP/AVPF Transport Layer Feedback for Congestion Control" anchor="sec:avpf">
-        <t>
-          Congestion control feedback can also be sent in a non-compound
-          RTCP packet <xref target="RFC5506"/> if the RTP/AVPF profile 
-          <xref target="RFC4585"/> or the RTP/SAVPF profile 
-          <xref target="RFC5124"/> is used. In this case, the congestion
-          control feedback is sent as a Transport Layer FB message (RTCP
-          packet type 205), with FMT=2 (congestion control feedback). 
-          The format of this RTCP packet is as follows:
-        </t>
+      <section anchor="sec:avpf"
+               title="RTP/AVPF Transport Layer Feedback for Congestion Control">
+        <t>Congestion control feedback can also be sent in a non-compound RTCP
+        packet <xref target="RFC5506"></xref> if the RTP/AVPF profile <xref
+        target="RFC4585"></xref> or the RTP/SAVPF profile <xref
+        target="RFC5124"></xref> is used. In this case, the congestion control
+        feedback is sent as a Transport Layer FB message (RTCP packet type
+        205), with FMT=2 (congestion control feedback). The format of this
+        RTCP packet is as follows:</t>
 
         <t><figure>
             <artwork><![CDATA[
@@ -358,20 +360,15 @@
 ]]></artwork>
           </figure></t>
 
-      <t>
-        The first 8 octets are the RTCP header, with PT=205 and FMT=2 
-        specifying the remainder is a congestion control feedback packet,
-        and including the SSRC of the packet sender.
-      </t>
+        <t>The first 8 octets are the RTCP header, with PT=205 and FMT=2
+        specifying the remainder is a congestion control feedback packet, and
+        including the SSRC of the packet sender.</t>
 
-      <t>
-        Section 6.1 of <xref target="RFC4585"/> requires this is
-        followed by the SSRC of the media source being reported upon. 
-        Accordingly, the format of the report is changed from that of
-        the RTCP XR report block, to move the timestamp to the end.
-        The meaning of all the fields is a described in
-        <xref target="sec:xr"/>.
-      </t>
+        <t>Section 6.1 of <xref target="RFC4585"></xref> requires this is
+        followed by the SSRC of the media source being reported upon.
+        Accordingly, the format of the report is changed from that of the RTCP
+        XR report block, to move the timestamp to the end. The meaning of all
+        the fields is a described in <xref target="sec:xr"></xref>.</t>
       </section>
     </section>
 
