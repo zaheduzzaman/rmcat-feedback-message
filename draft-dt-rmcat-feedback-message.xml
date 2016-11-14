@@ -53,23 +53,16 @@
       </address>
     </author>
 
-    <author fullname="Varun Singh" initials="V." surname="Singh">
-      <organization abbrev="callstats.io">Nemu Dialogue Systems
-      Oy</organization>
-
+<author fullname="Varun Singh" initials="V." surname="Singh">
+      <organization abbrev="callstats.io">CALLSTATS I/O Oy</organization>
       <address>
         <postal>
-          <street>Runeberginkatu 4c A 4</street>
-
+          <street>Runeberginkatu 4c A 4 </street>
           <city>Helsinki</city>
-
           <code>00100</code>
-
           <country>Finland</country>
         </postal>
-
-        <email>varun.singh@iki.fi</email>
-
+          <email>varun.singh@iki.fi</email>
         <uri>http://www.callstats.io/</uri>
       </address>
     </author>
@@ -253,18 +246,31 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |          begin_seq            |             end_seq           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |L|ECN|  Arrival time offset    | ...                           .
+    |          chunk 1              |             chunk 2           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    .                                                               .
-    .                                                               .
+    :                              ...                              :
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |          chunk n-1            |             chunk n           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |ECN|  Arrival time offset      | ...                           :
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    :                                                               :
+    :                                                               :
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                  SSRC of nth media source                     |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |          begin_seq            |             end_seq           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |L|ECN|  Arrival time offset    | ...                           |
-    .                                                               .
-    .                                                               .
+    |          chunk 1              |             chunk 2           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    :                              ...                              :
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |          chunk n-1            |             chunk n           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |ECN|  Arrival time offset      | ...                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    :                                                               :
+    :                                                               :
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -300,10 +306,9 @@
         the compression used (if any), revisit this if packet format is
         changed later]</t>
 
-        <t>L (1 bit): is a boolean to indicate if the packet was received. 0
-        represents that the packet was not yet received and all the subsequent
-        bits (ECN and ATO) are also set to 0. 1 represent the packet was
-        received and the subsequent bits in the block need to be parsed.</t>
+        <t>chunk (1 bit): is a boolean to indicate if the packet was received. 
+        1 represent the packet was received and the corresponding bytes in the 
+        block need to be parsed.</t>
 
         <t>ECN (2 bits): is the echoed ECN mark of the packet (00 if not
         received or if ECN is not used).</t>
