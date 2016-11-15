@@ -7,7 +7,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-dt-rmcat-feedback-message-02"
+<rfc category="std" docName="draft-dt-rmcat-feedback-message-01"
      ipr="trust200902">
   <front>
     <title abbrev="Congestion Control Feedback in RTCP">RTP Control Protocol
@@ -96,7 +96,7 @@
       </address>
     </author>
 
-    <date day="14" month="November" year="2016" />
+    <date day="24" month="October" year="2016" />
 
     <area>Transport</area>
 
@@ -273,122 +273,127 @@
 ]]></artwork>
           </figure></t>
 
-        <t>The XR Discard RLE report block uses the same format as specified
-        for the loss and duplicate report blocks in <xref
-        target="RFC3611"></xref>. The parameters "block length", "begin_seq",
-        and "end_seq" used in the text below have the same semantics and
-        representation as defined in <xref target="RFC3611"></xref>.</t>
+	<t>The XR Congestion Control feedback report block uses the same
+        beginning format as specified for the loss and duplicate report blocks in
+	<xref target="RFC3611"></xref>. The parameters "block length", "begin_seq",
+	and "end_seq" used in the text below have the same semantics and
+	representation as defined in <xref target="RFC3611"></xref>.</t>
 
         <t>All timestamps are derived from the same wall-clock using guidance
-        provided in <xref target="feedback_message"></xref>. The timestamp
-        units are in 0.1 millisecond increments unless specified otherwise via
-        session negotiation [Editor's note: Perhaps Colin has better words for
-        RTCP option specification and negotiation.]</t>
+	provided in <xref target="feedback_message"></xref>. The timestamp
+	units are in 0.1 millisecond increments unless specified otherwise via
+       	session negotiation [Editor's note: Perhaps Colin has better words for
+	RTCP option specification and negotiation.] </t>
 
-        <t>Block Type field (BT, 8 bits): The RMCAT congestion control
-        feedback Report Block is identified by the constant RC2F. [Note to RFC
-        Editor: Please replace RC2F with the IANA provided RTCP XR block type
-        for this block.]</t>
+        <t>Block Type field (BT, 8 bits): The RMCAT congestion control feedback
+        Report Block is identified by the constant RC2F. [Note to RFC Editor:
+        Please replace RC2F with the IANA provided RTCP XR block type for this
+        block.]</t>
 
-        <t>Report Count field (RC, 8 bits): This field describes the number of
-        SSRCs reported by this report. The number should at least be 1.</t>
+        <t>Report Count field (RC, 8 bits): This field describes the number of SSRCs reported
+	by this report. The number should at least be 1.</t>
 
-        <t>Report Timestamp Field (RTS, 32 bits): This timestamp represents
-        when this report was generated and uses the same wall-clock that is
-        used for all the receive timestamps arrivals in this report. As all
-        other timestamps in the report will be formulated as time offsets from
-        this time, the report timestamp here must be equal to or later than
-        that associated with the most recently received packet in this report.
-        However, unlike the desired care in send timestamping of sent packets
-        (not described in this RFC), this report timestamp need not be as
-        accurate as possible relative to the actual time the report is sent.
-        That is, the RTS should not be relied upon as the actual send time for
-        this report by any entity receiving the report. The primary utility of
-        this timestamp is to provide an anchor for the arrival times of the
-        packets contained in this report.</t>
+        <t>Report Timestamp Field (RTS, 32 bits): This timestamp represents when this
+	report was generated and uses the same wall-clock that is used
+	for all the receive timestamps arrivals in this report. As all other
+	timestamps in the report will be formulated as time offsets
+	from this time, the report timestamp here must be equal to or later
+	than that associated with the most recently received packet in this
+	report. However, unlike the
+	desired care in send timestamping of sent packets (not described in
+	this RFC), this report timestamp need not be as accurate as possible
+	relative to the actual time the report is sent. That is, the RTS should
+	not be relied upon as the actual send time for this report by any
+	entity receiving the report. The primary utility of this timestamp
+	is to provide an anchor for the arrival times of the packets
+	contained in this report.</t>
 
-        <t>All the remaining fields described below appear in each individual
-        SSRC report block. The figure above depicts the case for N such SSRC
-        source blocks (i.e., RC = N). All fields are denoted by a SSRC source
-        block index i (also shown in figure where space allows). The index for
-        an individual packet data within a SSRC sub block is denoted by the
-        index j.</t>
+	<t>All the remaining fields described below appear in each individual
+	SSRC report block. The figure above depicts the case for N such SSRC
+	source blocks (i.e., RC = N). All fields are denoted by a SSRC source
+	block index i (also shown in figure where space allows). The
+	index for an individual packet data within a SSRC sub block is
+	denoted by the index j.</t>
 
-        <t>E field (E_i, 1 bit): This bit set to 1 whenever the ECN bits of
-        all received packets in between begin_seq and end_seq, inclusive, for
-        this SSRC were received with the identically same ECN bit values. This
-        E field bit is set to 0 when this is not true. When 1, the value of
-        ECN bits is reported in the immediately following ECN field. When 0,
-        the ECN bits for every received packet in between begin_seq and
-        end_seq, inclusive, are reported in a separate C block (described
-        below)</t>
+	<t>E field (E_i, 1 bit): This bit set to 1 whenever the ECN bits of all
+	received packets in between begin_seq and end_seq, inclusive, for this
+	SSRC were received with the identically same ECN bit values. This E field
+	bit is set to 0 when this is not true. When 1, the value of ECN bits is
+	reported in the immediately following ECN field. When 0, the ECN bits
+	for every received packet in between begin_seq and end_seq, inclusive,
+	are reported in a separate C block (described below)</t>
+	
+	<t>ECN field (ECN_i, 2 bits): When the E field is one, these bits are to be
+	set to the ECN bits found in all recieved packts. When the E field is
+	zero, these bits should be set to a value representative of
+	those in the received packets (such as the most prevalent value).
+	</t>
+	
+	<t>end_seq_delta field (end_seq_delta_i, 13 bits): This is derived from
+	end_seq (the ending sequence number for SSRC source block i).
+	This value shall be the lower order thirteen bits resulting from the following
+	operation performed in 16 bit or greater unsigned precision: the modulo 2^16
+	subtraction of begin_seq from end_seq (both 16-bit unsigned quantities
+	as per <xref target="RFC3611"></xref>). We note that the number of
+	packets to be reported for this SSRC will be one more than
+	end_seq_delta and that at most 8192 ((2^13-1)+1) packets (per SSRC)
+	can be reported using this format. A entity receiving this report
+	may thus re-create the end_seq for SSRC i via the modulo2^16 addition
+	of begin_seq and end_seq_delta. </t>
 
-        <t>ECN field (ECN_i, 2 bits): When the E field is one, these bits are
-        to be set to the ECN bits found in all recieved packts. When the E
-        field is zero, these bits should be set to a value representative of
-        those in the received packets (such as the most prevalent value).</t>
+        <t>Each sequence number between begin_seq and end_seq, inclusive,
+	is represented by an individual 16-bit arrival time offset (ATO) block.
+	The ATO blocks (specified below) are simply concatenated together.
+	When the ECN bits of received packets are not all identical, they
+	will be reported in 2-bit C blocks (specified below) which are
+	similarly concatenated together. The number of ATO blocks and the
+	number of C blocks (when required) is equal to the number of packets
+	reported for this SSRC (i.e., end_seq_delta_i+1 for SSRC source
+	block i).</t>
 
-        <t>end_seq_delta field (end_seq_delta_i, 13 bits): This is derived
-        from end_seq (the ending sequence number for SSRC source block i).
-        This value shall be the lower order thirteen bits resulting from the
-        following operation performed in 16 bit or greater unsigned precision:
-        the modulo 2^16 subtraction of begin_seq from end_seq (both 16-bit
-        unsigned quantities as per <xref target="RFC3611"></xref>). We note
-        that the number of packets to be reported for this SSRC will be one
-        more than end_seq_delta and that at most 8192 ((2^13-1)+1) packets
-        (per SSRC) can be reported using this format. A entity receiving this
-        report may thus re-create the end_seq for SSRC i via the modulo2^16
-        addition of begin_seq and end_seq_delta.</t>
+	<t>Arrival Time Offset field (ATO_i_j, 16 bits): This value is the arrival
+	time of the RTP packet at the receiver relative to the report timestamp
+	(RTS) for packet j in SSRC i. In the case of duplicate packet arrivals
+	for the seq_no being reported, the arrival time should be that
+	of the first packet received. If the packet number for the seq_no
+	being reported was not received, this field is set to 0xFFFF
+	(2^16-1). Otherwise, it is reported as a positive quantity - and in
+	the same timestamp units as the RTS - by the modulo 2^16 subtraction
+	of the reception timestamp from the RTS, with the following exception.
+	If the result of this subtraction is greater than 2^16-3 (i.e., > 0xFFFD),
+	then the value 0xFFFE shall be entered to indicate a time difference
+	of greater than 2^16-3 in timestamp units. This allows packets sent
+	up to 6.5532 seconds before the RTO timestamp to be reported assuming the
+	default 0.1 millisecond timestamp is employed.
+	As it is desired to 32-bit align all the ATO blocks, unused bits
+	(if any) in the last 32-bit word shall be zero padded. Thus the number
+	of 32-bit words for the ATO field is (end_seq_delta+1)/2
+	whenever (end_seq_delta+1)/2 is an integer and
+        ceil((end_seq_delta+1)/2) when it is not.  The number of
+	32-bit words used in the ATO portion of this report for the first
+	SSRC is depicted as K1 in the figure above.</t>	
 
-        <t>Each sequence number between begin_seq and end_seq, inclusive, is
-        represented by an individual 16-bit arrival time offset (ATO) block.
-        The ATO blocks (specified below) are simply concatenated together.
-        When the ECN bits of received packets are not all identical, they will
-        be reported in 2-bit C blocks (specified below) which are similarly
-        concatenated together. The number of ATO blocks and the number of C
-        blocks (when required) is equal to the number of packets reported for
-        this SSRC (i.e., end_seq_delta_i+1 for SSRC source block i).</t>
+	<t>C field (C_i_j, 2 bits): These fields are required whenever the E
+	field is set to zero (indicating that not all the received packets had
+	the same ECN bit values). The C_i_j fields are simply concatenated for
+	all sequence numbers between begin_seq and end_seq, inclusive. If the packet
+	corresponding to that sequence number was received (ATO value not 0xFFFF),
+	the two bits shall be set to the ECN bits for that packet.
+	If the packet corresponding to that sequence number was not received,
+	the value reported in the C_i field for this packet is meaningless, may
+	be set to any value (0x00 suggested), and should not be saved/recorded
+	or otherwise interpreted as meaningful by a recipient of this report.
+	As it is desired to 32-bit align all the C_i blocks, unused
+	bits (if any) in the last 32-bit word shall be zero padded. Thus the number
+	of 32-bit words for the C_i field is (end_seq_delta+1)/16 whenever
+	(end_seq_delta+1)/16 is an integer and ceil((end_seq_delta+1)/16) when
+	it is not.  The number of 32-bit words used in the C_i portion of this
+	report for the first SSRC is depicted as K2 above.</t>
 
-        <t>Arrival Time Offset field (ATO_i_j, 16 bits): This value is the
-        arrival time of the RTP packet at the receiver relative to the report
-        timestamp (RTS) for packet j in SSRC i. If the packet number for the
-        seq_no being reported was not received, this field is set to 0xFFFF
-        (2^16-1). Otherwise, it is reported as a positive quantity - and in
-        the same timestamp units as the RTS - by the modulo 2^16 subtraction
-        of the reception timestamp from the RTS, with the following exception.
-        If the result of this subtraction is greater than 2^16-3 (i.e., &gt;
-        0xFFFD), then the value 0xFFFE shall be entered to indicate a time
-        difference of greater than 2^16-3 in timestamp units. This allows
-        packets sent up to 6.5532 seconds before the RTO timestamp to be
-        reported assuming the default 0.1 millisecond timestamp is employed.
-        As it is desired to 32-bit align all the ATO blocks, unused bits (if
-        any) in the last 32-bit word shall be zero padded. Thus the number of
-        32-bit words for the ATO field is (end_seq_delta+1)/2 whenever
-        (end_seq_delta+1)/2 is an integer and ceil((end_seq_delta+1)/2) when
-        it is not. The number of 32-bit words used in the ATO portion of this
-        report for the first SSRC is depicted as K1 in the figure above.</t>
-
-        <t>C field (C_i_j, 2 bits): These fields are required whenever the E
-        field is set to zero (indicating that not all the received packets had
-        the same ECN bit values). The C_i_j fields are simply concatenated for
-        all sequence numbers between begin_seq and end_seq, inclusive. If the
-        packet corresponding to that sequence number was received (ATO value
-        not 0xFFFF), the two bits shall be set to the ECN bits for that
-        packet. If the packet corresponding to that sequence number was not
-        received, the value reported in the C_i field for this packet is
-        meaningless, may be set to any value (0x00 suggested), and should not
-        be saved/recorded or otherwise interpreted as meaningful by a
-        recipient of this report. As it is desired to 32-bit align all the C_i
-        blocks, unused bits (if any) in the last 32-bit word shall be zero
-        padded. Thus the number of 32-bit words for the C_i field is
-        (end_seq_delta+1)/16 whenever (end_seq_delta+1)/16 is an integer and
-        ceil((end_seq_delta+1)/16) when it is not. The number of 32-bit words
-        used in the C_i portion of this report for the first SSRC is depicted
-        as K2 above.</t>
-
-        <t>[TODO: Need to agree upon, then document, the compressed version of
-        the above. Could steal one more bit from end_seq_delta field or
-        specify a different RTCP XR block type.]</t>
+	<t>[TODO: Need to agree upon, then document, the compressed version of
+	the above. Could steal one more bit from end_seq_delta
+	field or specify a different RTCP XR block type.]</t>
+	
       </section>
 
       <section anchor="sec:avpf"
@@ -440,12 +445,13 @@
         specifying the remainder is a congestion control feedback packet, and
         including the SSRC of the packet sender.</t>
 
-        <t>Section 6.1 of <xref target="RFC4585"></xref> requires that the
-        first 8 octets are immediately followed by the SSRC of the media
-        source being reported upon. Accordingly, the format of this report is
-        modified from that of the RTCP XR report block, by moving the report
-        timestamp to the end. The meaning of all the fields beyond the first 8
-        octets is as described in <xref target="sec:xr"></xref>.</t>
+        <t>Section 6.1 of <xref target="RFC4585"></xref> requires that
+	the first 8 octets are immediately followed by the SSRC of the media
+	source being reported upon. Accordingly, the format of this
+	report is modified from that of the RTCP XR report block, by
+	moving the report timestamp to the end. The meaning of all the
+	fields beyond the first 8 octets is as described
+	in <xref target="sec:xr"></xref>.</t>
       </section>
     </section>
 
@@ -591,3 +597,4 @@
     </references>
   </back>
 </rfc>
+
