@@ -1,4 +1,4 @@
-VERSION = 02
+VERSION = 03
 
 DRAFTS = draft-dt-rmcat-feedback-message-$(VERSION).pdf \
          draft-dt-rmcat-feedback-message-$(VERSION).txt 
