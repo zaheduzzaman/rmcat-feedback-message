@@ -278,10 +278,9 @@
         <t>Each sequence number between the begin_seq and end_seq (both
         inclusive) is represented by a packet metric block of 16-bits that
         contains the L, ECN, and ATO metrics. If an odd number of reports are
-        included, i.e., end_seq - begin_seq is odd then it should be rounded
-        up to four (4) bytes boundary. [FIXME : the solution will depend on
-        the compression used (if any), revisit this if packet format is
-        changed later]</t>
+        included, i.e., end_seq - begin_seq is odd then 16 bits of zero padding
+        MUST be added after the last report, to align the RTCP packet to a 
+        four (4) bytes boundary.</t>
 
         <t>L (1 bit): is a boolean to indicate if the packet was received. 0
         represents that the packet was not yet received and all the subsequent
@@ -295,10 +294,11 @@
         the RTP packets at the receiver before this feedback report was
         generated measured in milliseconds. It is calculated by subtracting
         the reception timestamp of the RTP packet denoted by this 16bit block
-        and the timestamp (RTS) of this report.</t>
-
-        <t>[FIXME: should reserve 0xFFF to mean anything greater than 0xFFE?
-        This needs to wait until we have fixed the packet format ]</t>
+        and the timestamp (RTS) of this report.
+        If the measured value is greater than 8.189 seconds (the value that 
+        would be coded as 0x1FFD), the value 0x1FFE MUST be reported to 
+        indicate an over-range positive measurement.  If the measurement 
+        is unavailable, the value 0x1FFF MUST be reported.</t>
       </section>
 
       <section anchor="sec:avpf"
