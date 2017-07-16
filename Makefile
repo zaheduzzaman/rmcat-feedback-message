@@ -1,5 +1,7 @@
-DRAFTS = draft-dt-rmcat-feedback-message.pdf \
-         draft-dt-rmcat-feedback-message.txt 
+VERSION = 02
+
+DRAFTS = draft-dt-rmcat-feedback-message-$(VERSION).pdf \
+         draft-dt-rmcat-feedback-message-$(VERSION).txt 
 
 all: $(DRAFTS)
 
