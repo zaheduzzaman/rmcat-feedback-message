@@ -7,7 +7,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-dt-rmcat-feedback-message-01"
+<rfc category="std" docName="draft-dt-rmcat-feedback-message-03"
      ipr="trust200902">
   <front>
     <title abbrev="Congestion Control Feedback in RTCP">RTP Control Protocol
@@ -96,7 +96,7 @@
       </address>
     </author>
 
-    <date day="28" month="October" year="2016" />
+    <date day="16" month="July" year="2017" />
 
     <area>Transport</area>
 
@@ -145,23 +145,6 @@
       <xref target="I-D.ietf-rmcat-gcc"></xref> and Shared Bottleneck
       Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully
       future RTP congestion control algorithms as well.</t>
-
-      <t>[Editor's Note: consider removing this part of the section in the
-      later versions ] In preparing this memo, we have considered the
-      following: <list style="symbols">
-          <t>What are the feedback requirements for the proposed RTP
-          congestion control candidate solution?</t>
-
-          <t>Can we design a feedback message that is future proof, and
-          general enough to meet the needs of algorithms that have yet to be
-          defined?</t>
-
-          <t>Can we use existing RTCP Extended Report (XR) blocks and/or RTCP
-          Feedback Messages? If not, what is the rationale behind new XR
-          blocks and/or RTCP feedback messages?</t>
-
-          <t>What will be the wire format of the generic feedback message?</t>
-        </list></t>
     </section>
 
     <section title="Terminology">
@@ -295,10 +278,9 @@
         <t>Each sequence number between the begin_seq and end_seq (both
         inclusive) is represented by a packet metric block of 16-bits that
         contains the L, ECN, and ATO metrics. If an odd number of reports are
-        included, i.e., end_seq - begin_seq is odd then it should be rounded
-        up to four (4) bytes boundary. [FIXME : the solution will depend on
-        the compression used (if any), revisit this if packet format is
-        changed later]</t>
+        included, i.e., end_seq - begin_seq is odd then 16 bits of zero padding
+        MUST be added after the last report, to align the RTCP packet to a 
+        four (4) bytes boundary.</t>
 
         <t>L (1 bit): is a boolean to indicate if the packet was received. 0
         represents that the packet was not yet received and all the subsequent
@@ -312,10 +294,11 @@
         the RTP packets at the receiver before this feedback report was
         generated measured in milliseconds. It is calculated by subtracting
         the reception timestamp of the RTP packet denoted by this 16bit block
-        and the timestamp (RTS) of this report.</t>
-
-        <t>[FIXME: should reserve 0xFFF to mean anything greater than 0xFFE?
-        This needs to wait until we have fixed the packet format ]</t>
+        and the timestamp (RTS) of this report.
+        If the measured value is greater than 8.189 seconds (the value that 
+        would be coded as 0x1FFD), the value 0x1FFE MUST be reported to 
+        indicate an over-range positive measurement.  If the measurement 
+        is unavailable, the value 0x1FFF MUST be reported.</t>
       </section>
 
       <section anchor="sec:avpf"
