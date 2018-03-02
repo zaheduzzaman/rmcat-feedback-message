@@ -116,32 +116,32 @@
 
   <middle>
     <section title="Introduction">
-      <t>For interactive real-time traffic the typical protocol choice is
-      Realtime Transport Protocol (RTP) over User Datagram Protocol (UDP). RTP
-      does not provide any guarantee of Quality of Service (QoS), reliable or
-      timely delivery and expects the underlying transport protocol to do so.
-      UDP alone certainly does not meet that expectation. However, RTP Control
-      Protocol (RTCP) provides a mechanism to periodically send transport and
-      media metrics to the media sender which can be utilized and extended for
-      the purposes of RMCAT congestion control. For a congestion control
-      algorithm which operates at the media sender, RTCP messages can be
-      transmitted from the media receiver back to the media sender to enable
-      congestion control. In the absence of standardized messages for this
-      purpose, the congestion control algorithm designers have designed
-      proprietary RTCP messages that convey only those parameters required for
-      their respective designs. As a direct result, the different congestion
-      control (a.k.a. rate adaptation) designs are not interoperable. To
-      enable algorithm evolution as well as interoperability across designs
-      (e.g., different rate adaptation algorithms), it is highly desirable to
-      have generic congestion control feedback format.</t>
+      <t>For interactive real-time traffic, such as video conferencing
+      flows, the typical protocol choice is the Real-time Transport
+      Protocol (RTP) running over the User Datagram Protocol (UDP). RTP
+      does not provide any guarantee of Quality of Service (QoS), reliability,
+      or timely delivery, and expects the underlying transport protocol to
+      do so.  UDP alone certainly does not meet that expectation. However,
+      the RTP Control Protocol (RTCP) provides a mechanism by which the
+      receiver of an RTP flow can periodically send transport and media
+      quality metrics to the sender of that RTP flow. This information can
+      be used by the sender to perform congestion control.  In the absence
+      of standardized messages for this purpose, designers of congestion
+      control algorithms have developed proprietary RTCP messages that
+      convey only those parameters needed for their respective designs.
+      As a direct result, the different congestion control (i.e., rate
+      adaptation) designs are not interoperable.  To enable algorithm
+      evolution as well as interoperability across designs (e.g., different
+      rate adaptation algorithms), it is highly desirable to have generic
+      congestion control feedback format.</t>
 
       <t>To help achieve interoperability for unicast RTP congestion control,
-      this memo proposes a common RTCP feedback format that can be used by
+      this memo proposes a common RTCP feedback packet format that can be used by
       NADA <xref target="I-D.ietf-rmcat-nada"></xref>, SCReAM <xref
       target="I-D.ietf-rmcat-scream-cc"></xref>, Google Congestion Control
       <xref target="I-D.ietf-rmcat-gcc"></xref> and Shared Bottleneck
       Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully
-      future RTP congestion control algorithms as well.</t>
+      also by future RTP congestion control algorithms.</t>
     </section>
 
     <section title="Terminology">
