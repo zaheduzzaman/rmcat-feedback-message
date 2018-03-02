@@ -267,8 +267,8 @@
         number of 16-bit packet metric blocks included in the report block is
         not a multiple of two, then 16 bits of zero padding MUST be added after
         the last packet metric block, to align the end of the packet metric
-        blocks with the next 32 bit boundary.  The L, ECN, and ATO fields are
-        as follows:
+        blocks with the next 32 bit boundary. In each packet metric block,
+        the L, ECN, and ATO fields are as follows:
           <list style="symbols">
             <t>
               L (1 bit): is a boolean to indicate if the packet was
@@ -284,21 +284,26 @@
             </t>
 
             <t>
-              Arrival time offset (ATO, 13 bits): is the relative arrival
-              time of the RTP packets at the receiver before this feedback
-              report was generated measured in milliseconds. It is
-              calculated by subtracting the reception timestamp of the RTP
-              packet denoted by this 16bit block and the timestamp (RTS) of
-              this report.  If the measured value is greater than 8.189
-              seconds (the value that would be coded as 0x1FFD), the value
-              0x1FFE MUST be reported to indicate an over-range positive
-              measurement.  If the measurement is unavailable, the value
-              0x1FFF MUST be reported.
+              Arrival time offset (ATO, 13 bits): is the arrival time of
+              the RTP packet at the receiver. It is measured as an offset
+              from the time at which the RTCP congestion control feedback
+              report packet is sent. The arrival time offset is calculated
+              by subtracting the reception time of the RTP packet denoted
+              by this 16 bit packet metric block from the Report Timestamp
+              (RTS) field of the RTCP congestion control feedback report
+              packet in which the packet metric report block is contained.
+              The arrival time offset is measured in milliseconds.  If the
+              measured value is greater than 8189 milliseconds (the value
+              that would be coded as 0x1FFD), the value 0x1FFE MUST be
+              reported to indicate an over-range positive measurement.
+              If the measurement is unavailable, the value 0x1FFF MUST
+              be reported.
             </t>
           </list>
         </t>
 
-        <t>The RTCP packet concludes with the Report Timestamp (RTS, 32 bits).
+        <t>The RTCP congestion control feedback report packet concludes with
+        the Report Timestamp (RTS, 32 bits).
         This represents the time instant when the RTCP report was generated.
         The sender of the feedback message decides on the wall-clock. Usually,
         it should be derived from the same wall-clock that is used for
