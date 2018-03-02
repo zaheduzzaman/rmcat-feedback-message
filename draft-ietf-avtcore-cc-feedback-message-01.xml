@@ -156,57 +156,50 @@
       target="RFC5506"></xref> applies.</t>
     </section>
 
-    <section anchor="feedback_message" title="Feedback Message">
+    <section anchor="feedback_message" title="RTCP Feedback for Congestion Control">
       <t>Based on an analysis of NADA <xref target="I-D.ietf-rmcat-nada"></xref>,
       SCReAM <xref target="I-D.ietf-rmcat-scream-cc"></xref>, Google
       Congestion Control <xref target="I-D.ietf-rmcat-gcc"></xref> and
       Shared Bottleneck Detection <xref target="I-D.ietf-rmcat-sbd"></xref>,
-      the following congestion control feedback information has been
-      determined to be necessary:</t>
+      the following per-RTP packet congestion control feedback information
+      has been determined to be necessary:</t>
 
-      <t><list style="symbols">
-          <t>Packet Identifier : RTP sequence number. The RTP packet header
-          includes an incremental packet sequence number that the sender needs
-          to correlate packets sent at the sender with packets received at the
-          receiver.</t>
+      <t>
+        <list style="symbols">
+          <t>RTP sequence number: The receiver of an RTP flow needs to feedback
+          the sequence numbers of the received RTP packets to the sender, so the
+          sender can determine which packets were received and which were lost.
+          Packet loss is used as an indication of congestion by many congestion
+          control algorithms.</t>
 
-          <t>Packet Arrival Time : Arrival time stamp at the receiver of the
-          media. The sender requires the arrival time stamp of the respective
-          packet to determine delay and jitter the packet had experienced
-          during transmission. In a sender based congestion control solution
-          the sender requires to keep track of the sent packets - usually
-          packet sequence number, packet size and packet send time. With the
-          packet arrival time the sender can detect the delay and jitter
-          information. Along with packet loss and delay information the sender
-          can estimate the available bandwidth and thus adapt to the
-          situation.</t>
+          <t>Packet Arrival Time: The receiver of an RTP flow needs to feedback
+          the arrival time of each RTP packet to the sender. Packet delay and/or
+          delay variation (jitter) is used as a congestion signal by some congestion
+          control algorithms.</t>
 
-          <t>Packet Explicit Congestion Notification (ECN) Marking : If ECN
-          <xref target="RFC3168"></xref> is used, it is necessary to report on
-          the 2-bit ECN mark in received packets, indicating for each packet
-          whether it is marked not-ECT, ECT(0), ECT(1), or ECN-CE. If the path
-          on which the media traffic traversing is ECN capable then the sender
-          can use the Congestion Experienced (ECN-CE) marking information for
-          congestion control. It is important that the receiver sends the
-          ECN-CE marking information of the packet back to the sender to take
-          the advantages of ECN marking. Note that how the receiver gets the
-          ECN marking information at application layer is out of the scope of
-          this design team. Additional information for ECN use with RTP can be
-          found at <xref target="RFC6679"></xref>.</t>
-        </list></t>
+          <t>Packet Explicit Congestion Notification (ECN) Marking: If ECN
+          <xref target="RFC3168"></xref>, <xref target="RFC6679"></xref> is
+          used, it is necessary to feedback the 2-bit ECN mark in received
+          RTP packets, indicating for each RTP packet whether it is marked
+          not-ECT, ECT(0), ECT(1), or ECN-CE. If the path used by the RTP
+          traffic is ECN capable the sender can use Congestion Experienced
+          (ECN-CE) marking information as a congestion control signal.</t>
+        </list>
+      </t>
 
-      <t>The feedback messages can have one or more of the above information
-      blocks. For RTCP based feedback message the packet information block
-      will be grouped by Synchronization Source (SSRC) identifier.</t>
+      <t>Every RTP flow is identified by its Synchronization Source (SSRC)
+      identifier. Accordingly, the RTCP feedback format needs to group its
+      reports by SSRC, sending one report block per received SSRC.</t>
 
       <t>As a practical matter, we note that host Operating System (OS)
-      process interruptions can occur at inopportune times. Thus, the
-      recording of the sent times at the sender and arrival times at the
-      receiver should be made with deliberate care. This is because the time
+      process interruptions can occur at inopportune times. Accordingly,
+      recording RTP packet send times at the sender, and their corresponding
+      RTP packet arrival times at the
+      receiver, should be done with deliberate care. This is because the time
       duration of host OS interruptions can be significant relative to the
       precision desired in the one-way delay estimates. Specifically, the send
       time should be recorded at the latest opportunity prior to outputting
-      the media packet at the sender (e.g., socket or RTP API) and the arrival
+      the RTP packet at the sender (e.g., socket or RTP API) and the arrival
       time at the receiver (e.g., socket or RTP API) should be recorded at the
       earliest opportunity available to the receiver.</t>
 
