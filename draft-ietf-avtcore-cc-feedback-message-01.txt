@@ -158,10 +158,10 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    identifier.  Accordingly, the RTCP feedback format needs to group its
    reports by SSRC, sending one report block per received SSRC.
 
-   As a practical matter, we note that host Operating System (OS)
+   As a practical matter, we note that host operating system (OS)
    process interruptions can occur at inopportune times.  Accordingly,
-   recording RTP packet send times at the sender, and their
-   corresponding RTP packet arrival times at the receiver, should be
+   recording RTP packet send times at the sender, and the corresponding
+   RTP packet arrival times at the receiver, needs to be done with
 
 
 
@@ -170,13 +170,12 @@ Sarker, et al.          Expires September 3, 2018               [Page 3]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-   done with deliberate care.  This is because the time duration of host
-   OS interruptions can be significant relative to the precision desired
-   in the one-way delay estimates.  Specifically, the send time should
-   be recorded at the latest opportunity prior to outputting the RTP
-   packet at the sender (e.g., socket or RTP API) and the arrival time
-   at the receiver (e.g., socket or RTP API) should be recorded at the
-   earliest opportunity available to the receiver.
+   deliberate care.  This is because the time duration of host OS
+   interruptions can be significant relative to the precision desired in
+   the one-way delay estimates.  Specifically, the send time needs to be
+   recorded at the last opportunity prior to transmitting the RTP packet
+   at the sender, and the arrival time at the receiver needs to be
+   recorded at the earliest available opportunity.
 
 3.1.  RTCP Congestion Control Feedback Report
 
@@ -217,6 +216,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |                 Report Timestamp (32bits)                     |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 
 
 

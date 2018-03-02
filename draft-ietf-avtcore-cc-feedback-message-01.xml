@@ -191,17 +191,16 @@
       identifier. Accordingly, the RTCP feedback format needs to group its
       reports by SSRC, sending one report block per received SSRC.</t>
 
-      <t>As a practical matter, we note that host Operating System (OS)
+      <t>As a practical matter, we note that host operating system (OS)
       process interruptions can occur at inopportune times. Accordingly,
-      recording RTP packet send times at the sender, and their corresponding
+      recording RTP packet send times at the sender, and the corresponding
       RTP packet arrival times at the
-      receiver, should be done with deliberate care. This is because the time
+      receiver, needs to be done with deliberate care. This is because the time
       duration of host OS interruptions can be significant relative to the
       precision desired in the one-way delay estimates. Specifically, the send
-      time should be recorded at the latest opportunity prior to outputting
-      the RTP packet at the sender (e.g., socket or RTP API) and the arrival
-      time at the receiver (e.g., socket or RTP API) should be recorded at the
-      earliest opportunity available to the receiver.</t>
+      time needs to be recorded at the last opportunity prior to transmitting
+      the RTP packet at the sender, and the arrival time at the receiver needs
+      to be recorded at the earliest available opportunity.</t>
 
       <section anchor="sec:ccfb" title="RTCP Congestion Control Feedback Report">
         <t>Congestion control feedback can be sent as part of a regular
