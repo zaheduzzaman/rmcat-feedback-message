@@ -132,12 +132,11 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 3.  Feedback Message
 
-   The design team analyzed the feedback requirements from the different
-   proposed candidate in RMCAT WG.  The analysis showed some
-   commonalities between the proposed solution candidate and some can be
-   derived from other information.  The design team has agreed to have
-   following packet information block in the feedback message to satisfy
-   different requirement analyzed.
+   Based on an analysis of NADA [I-D.ietf-rmcat-nada], SCReAM
+   [I-D.ietf-rmcat-scream-cc], Google Congestion Control
+   [I-D.ietf-rmcat-gcc] and Shared Bottleneck Detection
+   [I-D.ietf-rmcat-sbd], the following congestion control feedback
+   information has been determined to be necessary:
 
    o  Packet Identifier : RTP sequence number.  The RTP packet header
       includes an incremental packet sequence number that the sender
@@ -162,6 +161,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
       the media traffic traversing is ECN capable then the sender can
       use the Congestion Experienced (ECN-CE) marking information for
       congestion control.  It is important that the receiver sends the
+      ECN-CE marking information of the packet back to the sender to
 
 
 
@@ -170,7 +170,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 3]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-      ECN-CE marking information of the packet back to the sender to
       take the advantages of ECN marking.  Note that how the receiver
       gets the ECN marking information at application layer is out of
       the scope of this design team.  Additional information for ECN use
@@ -202,6 +201,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    Irrespective of how it is transported, the congestion control
    feedback is sent as a Transport Layer Feedback Message (RTCP packet
    type 205).  The format of this RTCP packet is as follows:
+
 
 
 

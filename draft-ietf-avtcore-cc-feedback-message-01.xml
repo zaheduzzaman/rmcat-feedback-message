@@ -160,12 +160,12 @@
     </section>
 
     <section anchor="feedback_message" title="Feedback Message">
-      <t>The design team analyzed the feedback requirements from the different
-      proposed candidate in RMCAT WG. The analysis showed some commonalities
-      between the proposed solution candidate and some can be derived from
-      other information. The design team has agreed to have following packet
-      information block in the feedback message to satisfy different
-      requirement analyzed.</t>
+      <t>Based on an analysis of NADA <xref target="I-D.ietf-rmcat-nada"></xref>,
+      SCReAM <xref target="I-D.ietf-rmcat-scream-cc"></xref>, Google
+      Congestion Control <xref target="I-D.ietf-rmcat-gcc"></xref> and
+      Shared Bottleneck Detection <xref target="I-D.ietf-rmcat-sbd"></xref>,
+      the following congestion control feedback information has been
+      determined to be necessary:</t>
 
       <t><list style="symbols">
           <t>Packet Identifier : RTP sequence number. The RTP packet header
