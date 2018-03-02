@@ -18,15 +18,12 @@ Expires: September 3, 2018                         University of Glasgow
 
 Abstract
 
-   This document describes a feedback message intended to enable
-   congestion control for interactive real-time traffic.  The RTP Media
-   Congestion Avoidance Techniques (RMCAT) Working Group formed a design
-   team to analyze feedback requirements from various congestion control
-   algorithms and to design a generic feedback message to help ensure
-   interoperability across those algorithms.  The feedback message is
-   designed for a sender-based congestion control, which means the
-   receiver of the media will send necessary feedback to the sender of
-   the media to perform the congestion control at the sender.
+   This document describes an RTCP feedback message intended to enable
+   congestion control for interactive real-time traffic using RTP.  The
+   feedback message is designed for a sender-based congestion control,
+   which means the receiver of the media will send necessary feedback to
+   the sender of the media to perform the congestion control at the
+   sender.
 
 Status of This Memo
 
@@ -50,6 +47,9 @@ Copyright Notice
    Copyright (c) 2018 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
 
 
 
@@ -58,9 +58,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 1]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-   This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -106,6 +103,9 @@ Table of Contents
    (e.g., different rate adaptation algorithms), it is highly desirable
    to have generic congestion control feedback format.
 
+   To help achieve interoperability for unicast RTP congestion control,
+   this memo proposes a common RTCP feedback format that can be used by
+   NADA [I-D.ietf-rmcat-nada], SCReAM [I-D.ietf-rmcat-scream-cc], Google
 
 
 
@@ -114,9 +114,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 2]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-   To help achieve interoperability for unicast RTP congestion control,
-   this memo proposes a common RTCP feedback format that can be used by
-   NADA [I-D.ietf-rmcat-nada], SCReAM [I-D.ietf-rmcat-scream-cc], Google
    Congestion Control [I-D.ietf-rmcat-gcc] and Shared Bottleneck
    Detection [I-D.ietf-rmcat-sbd], and hopefully future RTP congestion
    control algorithms as well.
@@ -162,6 +159,9 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
       use the Congestion Experienced (ECN-CE) marking information for
       congestion control.  It is important that the receiver sends the
       ECN-CE marking information of the packet back to the sender to
+      take the advantages of ECN marking.  Note that how the receiver
+      gets the ECN marking information at application layer is out of
+
 
 
 
@@ -170,8 +170,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 3]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-      take the advantages of ECN marking.  Note that how the receiver
-      gets the ECN marking information at application layer is out of
       the scope of this design team.  Additional information for ECN use
       with RTP can be found at [RFC6679].
 
@@ -201,6 +199,8 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    Irrespective of how it is transported, the congestion control
    feedback is sent as a Transport Layer Feedback Message (RTCP packet
    type 205).  The format of this RTCP packet is as follows:
+
+
 
 
 
