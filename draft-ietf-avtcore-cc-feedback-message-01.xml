@@ -106,10 +106,11 @@
 
     <abstract>
       <t>This document describes an RTCP feedback message intended to enable
-      congestion control for interactive real-time traffic using RTP. The feedback message is
-      designed for a sender-based congestion control, which means the receiver
-      of the media will send necessary feedback to the sender of the media to
-      perform the congestion control at the sender.</t>
+      congestion control for interactive real-time traffic using RTP. The
+      feedback message is designed for use with a sender-based congestion
+      control algorithm, in which the receiver of an RTP flow sends RTCP
+      feedback packets to the sender containing the information the sender
+      needs to perform congestion control.</t>
     </abstract>
   </front>
 
