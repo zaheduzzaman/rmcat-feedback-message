@@ -292,7 +292,8 @@
               by this 16 bit packet metric block from the Report Timestamp
               (RTS) field of the RTCP congestion control feedback report
               packet in which the packet metric report block is contained.
-              The arrival time offset is measured in milliseconds.  If the
+              The arrival time offset is measured in milliseconds, and is
+              rounded to the nearest whole millisecond.  If the
               measured value is greater than 8189 milliseconds (the value
               that would be coded as 0x1FFD), the value 0x1FFE MUST be
               reported to indicate an over-range positive measurement.
