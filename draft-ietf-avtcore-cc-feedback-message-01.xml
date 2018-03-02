@@ -304,14 +304,12 @@
         </t>
 
         <t>The RTCP congestion control feedback report packet concludes with
-        the Report Timestamp (RTS, 32 bits).
-        This represents the time instant when the RTCP report was generated.
-        The sender of the feedback message decides on the wall-clock. Usually,
-        it should be derived from the same wall-clock that is used for
-        timestamping RTP packets arrival . Consistency in the unit and
-        resolution (10th of millisecond should be good enough ) is important
-        here. In addition, the RTP sender can ask for a specific resolution
-        it wants.</t>
+        the Report Timestamp field (RTS, 32 bits). This represents the time
+        instant when the report packet was generated. The value of RTS field
+        is derived from the same wallclock used to generate the NTP timestamp
+        field in RTCP SR/RR packets. It is formatted as the middle 32 bits of
+        an NTP format timestamp, as described in Section 4 of
+        <xref target="RFC3550"></xref>.</t>
 
       </section>
     </section>
