@@ -1,7 +1,7 @@
-VERSION = 04
+VERSION = 00
 
-DRAFTS = draft-dt-rmcat-feedback-message-$(VERSION).pdf \
-         draft-dt-rmcat-feedback-message-$(VERSION).txt 
+DRAFTS = draft-ietf-avtcore-cc-feedback-message-$(VERSION).pdf \
+         draft-ietf-avtcore-cc-feedback-message-$(VERSION).txt 
 
 all: $(DRAFTS)
 
