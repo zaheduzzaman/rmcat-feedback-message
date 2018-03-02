@@ -212,9 +212,10 @@
 
         <t>Irrespective of how it is transported, the congestion control 
         feedback is sent as a Transport Layer Feedback Message (RTCP packet 
-        type 205). The format of this RTCP packet is as follows:</t>
+        type 205). The format of this RTCP packet is shown in 
+        <xref target="rtcp-packet"></xref>:</t>
 
-        <t><figure>
+        <t><figure anchor="rtcp-packet" title="RTCP Congestion Control Feedback Packet Format">
             <artwork><![CDATA[
      0                   1                   2                   3
      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
