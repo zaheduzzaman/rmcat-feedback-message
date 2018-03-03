@@ -312,6 +312,22 @@
         is formatted as the middle 32 bits of an NTP format timestamp, as 
         described in Section 4 of <xref target="RFC3550"></xref>.</t>
 
+        <t>RTCP congestion control feedback packets SHOULD include a report
+        block for each SSRC that is being congestion controlled. The sequence
+        number ranges reported on in consecutive reports for an SSRC SHOULD
+        be consecutive and SHOULD NOT overlap (i.e., begin_seq for a report
+        is expected to be one greater, modulo 65535, than end_seq of the
+        previous report for that SSRC). If overlapping reports are sent, the
+        information in the later report updates that in any previous reports
+        for packets included in both reports (although note that such updated
+        information will likely arrive too late to affect congestion control
+        decisions at the sender).  Reports that cover RTP sequence number
+        ranges that are more than 16384 (i.e., one quarter of the sequence
+        number space) ahead of the last end_seq received from an SSRC, or
+        behind the last begin_seq received from an SSRC, modulo 65535 to
+        account for wrap-around, MUST be ignored.
+        </t>
+
       </section>
     </section>
 

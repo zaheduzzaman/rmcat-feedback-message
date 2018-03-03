@@ -72,10 +72,10 @@ Table of Contents
    3.  RTCP Feedback for Congestion Control  . . . . . . . . . . . .   3
      3.1.  RTCP Congestion Control Feedback Report . . . . . . . . .   4
    4.  Feedback Frequency and Overhead . . . . . . . . . . . . . . .   6
-   5.  Design Rationale  . . . . . . . . . . . . . . . . . . . . . .   6
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   5.  Design Rationale  . . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
@@ -290,6 +290,21 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    It is formatted as the middle 32 bits of an NTP format timestamp, as
    described in Section 4 of [RFC3550].
 
+   RTCP congestion control feedback packets SHOULD include a report
+   block for each SSRC that is being congestion controlled.  The
+   sequence number ranges reported on in consecutive reports for an SSRC
+   SHOULD be consecutive and SHOULD NOT overlap (i.e., begin_seq for a
+   report is expected to be one greater, modulo 65535, than end_seq of
+   the previous report for that SSRC).  If overlapping reports are sent,
+   the information in the later report updates that in any previous
+   reports for packets included in both reports (although note that such
+   updated information will likely arrive too late to affect congestion
+   control decisions at the sender).  Reports that cover RTP sequence
+   number ranges that are more than 16384 (i.e., one quarter of the
+   sequence number space) ahead of the last end_seq received from an
+   SSRC, or behind the last begin_seq received from an SSRC, modulo
+   65535 to account for wrap-around, MUST be ignored.
+
 4.  Feedback Frequency and Overhead
 
    There is a trade-off between speed and accuracy of reporting, and the
@@ -312,6 +327,17 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    50-200ms.  A value within this range need to be negotiated at session
    setup.
 
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 6]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
+
 5.  Design Rationale
 
    The primary function of RTCP SR/RR packets is to report statistics on
@@ -330,14 +356,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    packets to their sender.  Even though it was not designed to replace
    congestion control, TMMBR has been used as a means to do receiver
    based congestion control where the session bandwidth is high enough
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 6]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
-
    to send frequent TMMBR messages, especially when used with non-
    compound RTCP packets [RFC5506].  This approach requires the receiver
    of the RTP packets to monitor their reception, determine the level of
@@ -364,6 +382,18 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    congestion control algorithms.  The new congestion control feedback
    RTCP packet described in Section 3 provides such a mechanism.
 
+
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 7]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
+
 6.  Acknowledgements
 
    This document is an outcome of RMCAT design team discussion.  We
@@ -382,17 +412,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    There is a risk of causing congestion if an on-path attacker modifies
    the feedback messages in such a manner to make available bandwidth
    greater than it is in reality.  [More on security consideration TBD.]
-
-
-
-
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 7]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
 
 9.  References
 
@@ -424,6 +443,13 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               DOI 10.17487/RFC3551, July 2003, <https://www.rfc-
               editor.org/info/rfc3551>.
 
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 8]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
+
    [RFC3611]  Friedman, T., Ed., Caceres, R., Ed., and A. Clark, Ed.,
               "RTP Control Protocol Extended Reports (RTCP XR)",
               RFC 3611, DOI 10.17487/RFC3611, November 2003,
@@ -439,16 +465,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Real-time Transport Control Protocol (RTCP)-Based Feedback
               (RTP/SAVPF)", RFC 5124, DOI 10.17487/RFC5124, February
               2008, <https://www.rfc-editor.org/info/rfc5124>.
-
-
-
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 8]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
 
    [RFC5506]  Johansson, I. and M. Westerlund, "Support for Reduced-Size
               Real-Time Transport Control Protocol (RTCP): Opportunities
@@ -479,6 +495,17 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Scheme for Real-Time Media", draft-ietf-rmcat-nada-04
               (work in progress), March 2017.
 
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 9]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
+
    [I-D.ietf-rmcat-sbd]
               Hayes, D., Ferlin, S., Welzl, M., and K. Hiorth, "Shared
               Bottleneck Detection for Coupled Congestion Control for
@@ -494,17 +521,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               "Codec Control Messages in the RTP Audio-Visual Profile
               with Feedback (AVPF)", RFC 5104, DOI 10.17487/RFC5104,
               February 2008, <https://www.rfc-editor.org/info/rfc5104>.
-
-
-
-
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 9]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
 
    [RFC6843]  Clark, A., Gross, K., and Q. Wu, "RTP Control Protocol
               (RTCP) Extended Report (XR) Block for Delay Metric
@@ -529,6 +545,21 @@ Authors' Addresses
    United Kingdom
 
    Email: csp@csperkins.org
+
+
+
+
+
+
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018              [Page 10]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
    Varun Singh
@@ -557,4 +588,29 @@ Authors' Addresses
 
 
 
-Sarker, et al.          Expires September 3, 2018              [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018              [Page 11]
