@@ -425,9 +425,28 @@
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>There is a risk of causing congestion if an on-path attacker modifies
-      the feedback messages in such a manner to make available bandwidth
-      greater than it is in reality. [More on security consideration TBD.]</t>
+      <t>The security considerations of the RTP specification
+      <xref target="RFC3550"/>, the applicable RTP profile (e.g.,
+      <xref target="RFC3551"/>, <xref target="RFC3711"/>, or
+      <xref target="RFC4585"/>), and the RTP congestion control algorithm
+      that is in use (e.g., <xref target="I-D.ietf-rmcat-nada"/>,
+      <xref target="I-D.ietf-rmcat-scream-cc"/>,
+      <xref target="I-D.ietf-rmcat-gcc"/>, or
+      <xref target="I-D.ietf-rmcat-sbd"/>) apply.</t>
+
+      <t>A receiver that intentionally generates inaccurate RTCP congestion
+      control feedback reports might be able trick the sender into sending
+      at a greater rate than the path can support, thereby congesting the
+      path. This will negatively impact the quality of experience of that
+      receiver. Since RTP is an unreliable transport, a sender can intentionally
+      leave a gap in the RTP sequence number space without causing harm, to
+      check that the receiver is correctly reporting losses.</t>
+
+      <t>An on-path attacker that can modify RTCP congestion control feedback
+      packets can change the reports to trick the sender into sending at either
+      an excessively high or excessively low rate, leading to denial of service.
+      The secure RTCP profile <xref target="RFC3711"/> can be used to authenticate
+      RTCP packets to protect against this attack.</t>
     </section>
   </middle>
 
@@ -440,6 +459,8 @@
       <?rfc include='reference.RFC.3551'?>
 
       <?rfc include='reference.RFC.3611'?>
+
+      <?rfc include='reference.RFC.3711'?>
 
       <?rfc include='reference.RFC.4585'?>
 

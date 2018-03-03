@@ -78,8 +78,8 @@ Table of Contents
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -413,13 +413,42 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 8.  Security Considerations
 
-   There is a risk of causing congestion if an on-path attacker modifies
-   the feedback messages in such a manner to make available bandwidth
-   greater than it is in reality.  [More on security consideration TBD.]
+   The security considerations of the RTP specification [RFC3550], the
+   applicable RTP profile (e.g., [RFC3551], [RFC3711], or [RFC4585]),
+   and the RTP congestion control algorithm that is in use (e.g.,
+   [I-D.ietf-rmcat-nada], [I-D.ietf-rmcat-scream-cc],
+   [I-D.ietf-rmcat-gcc], or [I-D.ietf-rmcat-sbd]) apply.
+
+   A receiver that intentionally generates inaccurate RTCP congestion
+   control feedback reports might be able trick the sender into sending
+   at a greater rate than the path can support, thereby congesting the
+   path.  This will negatively impact the quality of experience of that
+   receiver.  Since RTP is an unreliable transport, a sender can
+   intentionally leave a gap in the RTP sequence number space without
+   causing harm, to check that the receiver is correctly reporting
+   losses.
+
+   An on-path attacker that can modify RTCP congestion control feedback
+   packets can change the reports to trick the sender into sending at
+   either an excessively high or excessively low rate, leading to denial
+   of service.  The secure RTCP profile [RFC3711] can be used to
+   authenticate RTCP packets to protect against this attack.
 
 9.  References
 
 9.1.  Normative References
+
+
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 8]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
 
    [I-D.ietf-rmcat-rtp-cc-feedback]
               Perkins, C., "RTP Control Protocol (RTCP) Feedback for
@@ -442,14 +471,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Applications", STD 64, RFC 3550, DOI 10.17487/RFC3550,
               July 2003, <https://www.rfc-editor.org/info/rfc3550>.
 
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 8]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
-
    [RFC3551]  Schulzrinne, H. and S. Casner, "RTP Profile for Audio and
               Video Conferences with Minimal Control", STD 65, RFC 3551,
               DOI 10.17487/RFC3551, July 2003, <https://www.rfc-
@@ -459,6 +480,11 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               "RTP Control Protocol Extended Reports (RTCP XR)",
               RFC 3611, DOI 10.17487/RFC3611, November 2003,
               <https://www.rfc-editor.org/info/rfc3611>.
+
+   [RFC3711]  Baugher, M., McGrew, D., Naslund, M., Carrara, E., and K.
+              Norrman, "The Secure Real-time Transport Protocol (SRTP)",
+              RFC 3711, DOI 10.17487/RFC3711, March 2004,
+              <https://www.rfc-editor.org/info/rfc3711>.
 
    [RFC4585]  Ott, J., Wenger, S., Sato, N., Burmeister, C., and J. Rey,
               "Extended RTP Profile for Real-time Transport Control
@@ -470,6 +496,15 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Real-time Transport Control Protocol (RTCP)-Based Feedback
               (RTP/SAVPF)", RFC 5124, DOI 10.17487/RFC5124, February
               2008, <https://www.rfc-editor.org/info/rfc5124>.
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018               [Page 9]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
 
    [RFC5506]  Johansson, I. and M. Westerlund, "Support for Reduced-Size
               Real-Time Transport Control Protocol (RTCP): Opportunities
@@ -494,18 +529,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Time Communication", draft-ietf-rmcat-gcc-02 (work in
               progress), July 2016.
 
-
-
-
-
-
-
-
-Sarker, et al.          Expires September 3, 2018               [Page 9]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
-
    [I-D.ietf-rmcat-nada]
               Zhu, X., Pan, R., Ramalho, M., Cruz, S., Jones, P., Fu,
               J., and S. D'Aronco, "NADA: A Unified Congestion Control
@@ -527,6 +550,17 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               "Codec Control Messages in the RTP Audio-Visual Profile
               with Feedback (AVPF)", RFC 5104, DOI 10.17487/RFC5104,
               February 2008, <https://www.rfc-editor.org/info/rfc5104>.
+
+
+
+
+
+
+
+Sarker, et al.          Expires September 3, 2018              [Page 10]
+
+Internet-Draft     Congestion Control Feedback in RTCP        March 2018
+
 
    [RFC6843]  Clark, A., Gross, K., and Q. Wu, "RTP Control Protocol
               (RTCP) Extended Report (XR) Block for Delay Metric
@@ -553,15 +587,6 @@ Authors' Addresses
    Email: csp@csperkins.org
 
 
-
-
-
-
-Sarker, et al.          Expires September 3, 2018              [Page 10]
-
-Internet-Draft     Congestion Control Feedback in RTCP        March 2018
-
-
    Varun Singh
    Nemu Dialogue Systems Oy
    Runeberginkatu 4c A 4
@@ -580,31 +605,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    Phone: +1 919 476 2038
    Email: mramalho@cisco.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
