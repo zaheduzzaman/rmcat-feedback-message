@@ -315,7 +315,11 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    There is a trade-off between speed and accuracy of reporting, and the
    overhead of the reports.  [I-D.ietf-rmcat-rtp-cc-feedback] discusses
-   this trade-off, and the possible rates of feedback.
+   this trade-off, suggests desirable RTCP feedback rates, and provides
+   guidance on how to configure the RTCP bandwidth fraction, etc., to
+   make appropriate use of the reporting block described in this memo.
+   Specifications for RTP congestion control algorithms can also provide
+   guidance.
 
    It is a general understanding that the congestion control algorithms
    will work better with more frequent feedback - per packet feedback.
@@ -324,12 +328,8 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    receiver to the RTP sender.  It has been shown
    [I-D.ietf-rmcat-rtp-cc-feedback] that in most cases a per frame
    feedback is a reasonable assumption on how frequent the RTCP feedback
-   messages can be transmitted.  The design team also have noted that
-   even if a higher frequency of feedback is desired it is not viable if
-   the feedback messages starts to compete against the RTP traffic on
-   the feedback path during congestion period.  Analyzing the feedback
-   interval requirement [feedback-requirements] it can be seen that the
-   candidate algorithms can perform with a feedback interval range of
+   messages can be transmitted.  It has also been noted that even if a
+   higher frequency of feedback is desired it is not viable if the
 
 
 
@@ -338,6 +338,10 @@ Sarker, et al.          Expires September 3, 2018               [Page 6]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
+   feedback messages starts to compete against the RTP traffic on the
+   feedback path during congestion period.  Analyzing the feedback
+   interval requirement [feedback-requirements] it can be seen that the
+   candidate algorithms can perform with a feedback interval range of
    50-200ms.  A value within this range need to be negotiated at session
    setup.
 
@@ -382,10 +386,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    Considering these issues, we believe it appropriate to design a new
    RTCP feedback mechanism to convey information for sender based
-   congestion control algorithms.  The new congestion control feedback
-   RTCP packet described in Section 3 provides such a mechanism.
-
-
 
 
 
@@ -393,6 +393,9 @@ Sarker, et al.          Expires September 3, 2018               [Page 7]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   congestion control algorithms.  The new congestion control feedback
+   RTCP packet described in Section 3 provides such a mechanism.
 
 6.  Acknowledgements
 
@@ -438,10 +441,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Applications", STD 64, RFC 3550, DOI 10.17487/RFC3550,
               July 2003, <https://www.rfc-editor.org/info/rfc3550>.
 
-   [RFC3551]  Schulzrinne, H. and S. Casner, "RTP Profile for Audio and
-              Video Conferences with Minimal Control", STD 65, RFC 3551,
-              DOI 10.17487/RFC3551, July 2003, <https://www.rfc-
-              editor.org/info/rfc3551>.
+
 
 
 
@@ -449,6 +449,11 @@ Sarker, et al.          Expires September 3, 2018               [Page 8]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   [RFC3551]  Schulzrinne, H. and S. Casner, "RTP Profile for Audio and
+              Video Conferences with Minimal Control", STD 65, RFC 3551,
+              DOI 10.17487/RFC3551, July 2003, <https://www.rfc-
+              editor.org/info/rfc3551>.
 
    [RFC3611]  Friedman, T., Ed., Caceres, R., Ed., and A. Clark, Ed.,
               "RTP Control Protocol Extended Reports (RTCP XR)",
@@ -489,11 +494,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Time Communication", draft-ietf-rmcat-gcc-02 (work in
               progress), July 2016.
 
-   [I-D.ietf-rmcat-nada]
-              Zhu, X., Pan, R., Ramalho, M., Cruz, S., Jones, P., Fu,
-              J., and S. D'Aronco, "NADA: A Unified Congestion Control
-              Scheme for Real-Time Media", draft-ietf-rmcat-nada-04
-              (work in progress), March 2017.
 
 
 
@@ -505,6 +505,12 @@ Sarker, et al.          Expires September 3, 2018               [Page 9]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   [I-D.ietf-rmcat-nada]
+              Zhu, X., Pan, R., Ramalho, M., Cruz, S., Jones, P., Fu,
+              J., and S. D'Aronco, "NADA: A Unified Congestion Control
+              Scheme for Real-Time Media", draft-ietf-rmcat-nada-04
+              (work in progress), March 2017.
 
    [I-D.ietf-rmcat-sbd]
               Hayes, D., Ferlin, S., Welzl, M., and K. Hiorth, "Shared
@@ -545,12 +551,6 @@ Authors' Addresses
    United Kingdom
 
    Email: csp@csperkins.org
-
-
-
-
-
-
 
 
 

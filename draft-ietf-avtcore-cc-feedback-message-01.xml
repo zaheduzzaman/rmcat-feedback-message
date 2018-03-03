@@ -337,9 +337,12 @@
 
     <section title="Feedback Frequency and Overhead">
       <t>There is a trade-off between speed and accuracy of reporting, and the
-      overhead of the reports. <xref
-      target="I-D.ietf-rmcat-rtp-cc-feedback"></xref> discusses this
-      trade-off, and the possible rates of feedback.</t>
+      overhead of the reports. <xref target="I-D.ietf-rmcat-rtp-cc-feedback"/>
+      discusses this trade-off, suggests desirable RTCP feedback rates, and
+      provides guidance on how to configure the RTCP bandwidth fraction, etc.,
+      to make appropriate use of the reporting block described in this memo.
+      Specifications for RTP congestion control algorithms can also provide
+      guidance.</t>
 
       <t>It is a general understanding that the congestion control algorithms
       will work better with more frequent feedback - per packet feedback.
@@ -348,7 +351,7 @@
       receiver to the RTP sender. It has been shown <xref
       target="I-D.ietf-rmcat-rtp-cc-feedback"></xref> that in most cases a per
       frame feedback is a reasonable assumption on how frequent the RTCP
-      feedback messages can be transmitted. The design team also have noted
+      feedback messages can be transmitted. It has also been noted
       that even if a higher frequency of feedback is desired it is not viable
       if the feedback messages starts to compete against the RTP traffic on
       the feedback path during congestion period. Analyzing the feedback
