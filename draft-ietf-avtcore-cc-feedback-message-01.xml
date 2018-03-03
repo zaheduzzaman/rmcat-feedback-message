@@ -307,9 +307,9 @@
         the Report Timestamp field (RTS, 32 bits). This represents the time
         instant when the report packet was generated. The value of RTS field
         is derived from the same wallclock used to generate the NTP timestamp
-        field in RTCP SR/RR packets. It is formatted as the middle 32 bits of
-        an NTP format timestamp, as described in Section 4 of
-        <xref target="RFC3550"></xref>.</t>
+        field in RTCP Sender Report (SR) and Receiver Report (RR) packets. It
+        is formatted as the middle 32 bits of an NTP format timestamp, as 
+        described in Section 4 of <xref target="RFC3550"></xref>.</t>
 
       </section>
     </section>
@@ -338,8 +338,8 @@
     </section>
 
     <section title="Design Rationale">
-      <t>The primary function of RTCP Sender Report (SR) / Receiver Report
-      (RR) is to report the reception quality of the RTP packets. The regular SR / RR
+      <t>The primary function of RTCP SR/RR packets is to report the reception 
+      quality of the RTP packets. The regular SR / RR
       reports contain information about observed jitter, fractional packet
       loss and cumulative packet loss. The original intent of this information
       was to assist flow and congestion control mechanisms. Even though it is

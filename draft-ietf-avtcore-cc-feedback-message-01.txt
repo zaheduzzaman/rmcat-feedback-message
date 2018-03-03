@@ -77,7 +77,7 @@ Table of Contents
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
@@ -265,15 +265,15 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
       metric block from the Report Timestamp (RTS) field of the RTCP
       congestion control feedback report packet in which the packet
       metric report block is contained.  The arrival time offset is
-      measured in milliseconds.  If the measured value is greater than
-      8189 milliseconds (the value that would be coded as 0x1FFD), the
-      value 0x1FFE MUST be reported to indicate an over-range positive
+      measured in milliseconds, and is rounded to the nearest whole
+      millisecond.  If the measured value is greater than 8189
+      milliseconds (the value that would be coded as 0x1FFD), the value
+      0x1FFE MUST be reported to indicate an over-range positive
       measurement.  If the measurement is unavailable, the value 0x1FFF
       MUST be reported.
 
    The RTCP congestion control feedback report packet concludes with the
-   Report Timestamp (RTS, 32 bits).  This represents the time instant
-   when the RTCP report was generated.  The sender of the feedback
+   Report Timestamp field (RTS, 32 bits).  This represents the time
 
 
 
@@ -282,11 +282,11 @@ Sarker, et al.          Expires September 3, 2018               [Page 5]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-   message decides on the wall-clock.  Usually, it should be derived
-   from the same wall-clock that is used for timestamping RTP packets
-   arrival . Consistency in the unit and resolution (10th of millisecond
-   should be good enough ) is important here.  In addition, the RTP
-   sender can ask for a specific resolution it wants.
+   instant when the report packet was generated.  The value of RTS field
+   is derived from the same wallclock used to generate the NTP timestamp
+   field in RTCP Sender Report (SR) and Receiver Report (RR) packets.
+   It is formatted as the middle 32 bits of an NTP format timestamp, as
+   described in Section 4 of [RFC3550].
 
 4.  Feedback Frequency and Overhead
 
@@ -312,24 +312,24 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 5.  Design Rationale
 
-   The primary function of RTCP Sender Report (SR) / Receiver Report
-   (RR) is to report the reception quality of the RTP packets.  The
-   regular SR / RR reports contain information about observed jitter,
-   fractional packet loss and cumulative packet loss.  The original
-   intent of this information was to assist flow and congestion control
-   mechanisms.  Even though it is possible to do congestion control
-   based on information provided in the SR/RR reports it is not
-   sufficient to design an efficient congestion control algorithm for
-   interactive real-time communication.  An efficient congestion control
-   algorithm requires more fine grain information on per packet (see
-   Section 3) to react to the congestion or to avoid funder congestion
-   on the path.
+   The primary function of RTCP SR/RR packets is to report the reception
+   quality of the RTP packets.  The regular SR / RR reports contain
+   information about observed jitter, fractional packet loss and
+   cumulative packet loss.  The original intent of this information was
+   to assist flow and congestion control mechanisms.  Even though it is
+   possible to do congestion control based on information provided in
+   the SR/RR reports it is not sufficient to design an efficient
+   congestion control algorithm for interactive real-time communication.
+   An efficient congestion control algorithm requires more fine grain
+   information on per packet (see Section 3) to react to the congestion
+   or to avoid funder congestion on the path.
 
    Codec Control Message for AVPF [RFC5104] defines Temporary Maximum
    Media Bit Rate (TMMBR) message which conveys a temporary maximum
    bitrate limitation from the receiver of the RTP packets to the sender
    of the RTP packets.  Even though it is not designed to replace
    congestion control, TMMBR has been used as a means to do receiver
+   based congestion control where the session bandwidth is high enough
 
 
 
@@ -338,7 +338,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 6]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
-   based congestion control where the session bandwidth is high enough
    to send frequent TMMBR messages especially with reduced sized reports
    [RFC5506].  This requires the receiver of the RTP packets to analyze
    the data reception, detect congestion level and recommend a maximum
@@ -382,6 +381,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 9.  References
 
+9.1.  Normative References
 
 
 
@@ -393,8 +393,6 @@ Sarker, et al.          Expires September 3, 2018               [Page 7]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
-
-9.1.  Normative References
 
    [I-D.ietf-rmcat-rtp-cc-feedback]
               Perkins, C., "RTP Control Protocol (RTCP) Feedback for
@@ -442,6 +440,8 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Real-Time Transport Control Protocol (RTCP): Opportunities
               and Consequences", RFC 5506, DOI 10.17487/RFC5506, April
               2009, <https://www.rfc-editor.org/info/rfc5506>.
+
+
 
 
 
