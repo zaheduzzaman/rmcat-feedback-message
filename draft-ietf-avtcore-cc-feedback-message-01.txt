@@ -77,9 +77,9 @@ Table of Contents
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
@@ -348,11 +348,14 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    mechanism that can inform the sender of the receiver's current view
    of acceptable maximum bit rate.
 
-   Several RTCP eXtended Report (XR) blocks have been defined for
-   reporting of delay, loss and ECN marking.  It is possible to combine
-   several XR blocks to report the loss and ECN marking at the cost of
-   overhead and complexity.  However, there is no existing RTCP XR block
-   to report packet arrival time.
+   A number of RTCP eXtended Report (XR) blocks have previously been
+   defined to report details of packet loss, arrival times [RFC3611],
+   delay [RFC6843], and ECN marking [RFC6679].  It is possible to
+   combine several such XR blocks to report the detailed loss, arrival
+   time, and ECN marking marking information needed for effective
+   sender-based congestion control.  However, the result has high
+   overhead both in terms of bandwidth and complexity, due to the need
+   to stack multiple reports.
 
    Considering these issues, we believe it appropriate to design a new
    RTCP feedback mechanism to convey information for sender based
@@ -380,9 +383,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 9.  References
 
-9.1.  Normative References
-
-
 
 
 
@@ -393,6 +393,8 @@ Sarker, et al.          Expires September 3, 2018               [Page 7]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+9.1.  Normative References
 
    [I-D.ietf-rmcat-rtp-cc-feedback]
               Perkins, C., "RTP Control Protocol (RTCP) Feedback for
@@ -443,8 +445,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
 
-
-
 Sarker, et al.          Expires September 3, 2018               [Page 8]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
@@ -490,10 +490,10 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               with Feedback (AVPF)", RFC 5104, DOI 10.17487/RFC5104,
               February 2008, <https://www.rfc-editor.org/info/rfc5104>.
 
-Authors' Addresses
-
-
-
+   [RFC6843]  Clark, A., Gross, K., and Q. Wu, "RTP Control Protocol
+              (RTCP) Extended Report (XR) Block for Delay Metric
+              Reporting", RFC 6843, DOI 10.17487/RFC6843, January 2013,
+              <https://www.rfc-editor.org/info/rfc6843>.
 
 
 
@@ -505,6 +505,8 @@ Sarker, et al.          Expires September 3, 2018               [Page 9]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+Authors' Addresses
 
    Zaheduzzaman Sarker
    Ericsson AB
@@ -542,8 +544,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    Phone: +1 919 476 2038
    Email: mramalho@cisco.com
-
-
 
 
 

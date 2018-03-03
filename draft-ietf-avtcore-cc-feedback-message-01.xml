@@ -367,11 +367,14 @@
       the sender of the receiver's current view of acceptable maximum bit
       rate.</t>
 
-      <t>Several RTCP eXtended Report (XR) blocks have been
-      defined for reporting of delay, loss and ECN marking. It is possible to
-      combine several XR blocks to report the loss and ECN marking at the cost
-      of overhead and complexity. However, there is no existing RTCP XR block
-      to report packet arrival time.</t>
+      <t>A number of RTCP eXtended Report (XR) blocks have previously been
+      defined to report details of packet loss, arrival times <xref target="RFC3611"/>, 
+      delay <xref target="RFC6843"/>, and ECN marking <xref target="RFC6679"/>. 
+      It is possible to combine several such XR blocks to report the
+      detailed loss, arrival time, and ECN marking marking information
+      needed for effective sender-based congestion control. However, the
+      result has high overhead both in terms of bandwidth and complexity,
+      due to the need to stack multiple reports.</t>
 
       <t>Considering these issues, we believe it appropriate to design a
       new RTCP feedback mechanism to convey information for sender based
@@ -436,6 +439,8 @@
       <?rfc include="reference.I-D.ietf-rmcat-sbd"?>
 
       <?rfc include='reference.RFC.5104'?>
+
+      <?rfc include='reference.RFC.6843'?>
 
       <reference anchor="feedback-requirements"
                  target="://www.ietf.org/proceedings/95/slides/slides-95-rmcat-1.pdf">
