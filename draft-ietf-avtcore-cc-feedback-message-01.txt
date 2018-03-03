@@ -305,6 +305,12 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    SSRC, or behind the last begin_seq received from an SSRC, modulo
    65535 to account for wrap-around, MUST be ignored.
 
+   If no packets are received from an SSRC in a reporting interval, then
+   no report block is sent for that SSRC.  A regular SR/RR packet SHOULD
+   be sent instead, since the non-increased extended highest sequence
+   number received field of that SR/RR packet will inform the sender
+   that no packets have been received.
+
 4.  Feedback Frequency and Overhead
 
    There is a trade-off between speed and accuracy of reporting, and the
@@ -324,12 +330,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    the feedback path during congestion period.  Analyzing the feedback
    interval requirement [feedback-requirements] it can be seen that the
    candidate algorithms can perform with a feedback interval range of
-   50-200ms.  A value within this range need to be negotiated at session
-   setup.
-
-
-
-
 
 
 
@@ -337,6 +337,9 @@ Sarker, et al.          Expires September 3, 2018               [Page 6]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   50-200ms.  A value within this range need to be negotiated at session
+   setup.
 
 5.  Design Rationale
 
@@ -381,9 +384,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    RTCP feedback mechanism to convey information for sender based
    congestion control algorithms.  The new congestion control feedback
    RTCP packet described in Section 3 provides such a mechanism.
-
-
-
 
 
 
