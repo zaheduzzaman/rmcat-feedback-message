@@ -76,7 +76,7 @@ Table of Contents
    6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   9
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
@@ -240,7 +240,8 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    Each report block begins with the SSRC of the received RTP Stream on
    which it is reporting.  Following this, each sequence number between
-   the begin_seq and end_seq (both inclusive) is represented by a 16-bit
+   the begin_seq and end_seq (both inclusive; modulo 65535 to account
+   for possible sequence number wrap-around) is represented by a 16-bit
    packet metric block that contains the L, ECN, and ATO fields.  If the
    number of 16-bit packet metric blocks included in the report block is
    not a multiple of two, then 16 bits of zero padding MUST be added
@@ -272,8 +273,7 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
       measurement.  If the measurement is unavailable, the value 0x1FFF
       MUST be reported.
 
-   The RTCP congestion control feedback report packet concludes with the
-   Report Timestamp field (RTS, 32 bits).  This represents the time
+
 
 
 
@@ -282,6 +282,8 @@ Sarker, et al.          Expires September 3, 2018               [Page 5]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
+   The RTCP congestion control feedback report packet concludes with the
+   Report Timestamp field (RTS, 32 bits).  This represents the time
    instant when the report packet was generated.  The value of RTS field
    is derived from the same wallclock used to generate the NTP timestamp
    field in RTCP Sender Report (SR) and Receiver Report (RR) packets.
@@ -328,8 +330,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    packets to their sender.  Even though it was not designed to replace
    congestion control, TMMBR has been used as a means to do receiver
    based congestion control where the session bandwidth is high enough
-   to send frequent TMMBR messages, especially when used with non-
-   compound RTCP packets [RFC5506].  This approach requires the receiver
 
 
 
@@ -338,6 +338,8 @@ Sarker, et al.          Expires September 3, 2018               [Page 6]
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
 
+   to send frequent TMMBR messages, especially when used with non-
+   compound RTCP packets [RFC5506].  This approach requires the receiver
    of the RTP packets to monitor their reception, determine the level of
    congestion, and recommend a maximum bit rate suitable for current
    available bandwidth on the path; it also assumes that the RTP sender
@@ -381,8 +383,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
    the feedback messages in such a manner to make available bandwidth
    greater than it is in reality.  [More on security consideration TBD.]
 
-9.  References
-
 
 
 
@@ -393,6 +393,8 @@ Sarker, et al.          Expires September 3, 2018               [Page 7]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+9.  References
 
 9.1.  Normative References
 
@@ -438,10 +440,8 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               (RTP/SAVPF)", RFC 5124, DOI 10.17487/RFC5124, February
               2008, <https://www.rfc-editor.org/info/rfc5124>.
 
-   [RFC5506]  Johansson, I. and M. Westerlund, "Support for Reduced-Size
-              Real-Time Transport Control Protocol (RTCP): Opportunities
-              and Consequences", RFC 5506, DOI 10.17487/RFC5506, April
-              2009, <https://www.rfc-editor.org/info/rfc5506>.
+
+
 
 
 
@@ -449,6 +449,11 @@ Sarker, et al.          Expires September 3, 2018               [Page 8]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   [RFC5506]  Johansson, I. and M. Westerlund, "Support for Reduced-Size
+              Real-Time Transport Control Protocol (RTCP): Opportunities
+              and Consequences", RFC 5506, DOI 10.17487/RFC5506, April
+              2009, <https://www.rfc-editor.org/info/rfc5506>.
 
    [RFC6679]  Westerlund, M., Johansson, I., Perkins, C., O'Hanlon, P.,
               and K. Carlberg, "Explicit Congestion Notification (ECN)
@@ -490,11 +495,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               with Feedback (AVPF)", RFC 5104, DOI 10.17487/RFC5104,
               February 2008, <https://www.rfc-editor.org/info/rfc5104>.
 
-   [RFC6843]  Clark, A., Gross, K., and Q. Wu, "RTP Control Protocol
-              (RTCP) Extended Report (XR) Block for Delay Metric
-              Reporting", RFC 6843, DOI 10.17487/RFC6843, January 2013,
-              <https://www.rfc-editor.org/info/rfc6843>.
-
 
 
 
@@ -505,6 +505,11 @@ Sarker, et al.          Expires September 3, 2018               [Page 9]
 
 Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
+
+   [RFC6843]  Clark, A., Gross, K., and Q. Wu, "RTP Control Protocol
+              (RTCP) Extended Report (XR) Block for Delay Metric
+              Reporting", RFC 6843, DOI 10.17487/RFC6843, January 2013,
+              <https://www.rfc-editor.org/info/rfc6843>.
 
 Authors' Addresses
 
@@ -544,11 +549,6 @@ Authors' Addresses
 
    Phone: +1 919 476 2038
    Email: mramalho@cisco.com
-
-
-
-
-
 
 
 

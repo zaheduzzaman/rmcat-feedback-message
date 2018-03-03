@@ -262,7 +262,8 @@
      
         <t>Each report block begins with the SSRC of the received RTP Stream
         on which it is reporting. Following this, each sequence number between
-        the begin_seq and end_seq (both inclusive) is represented by a 16-bit
+        the begin_seq and end_seq (both inclusive; modulo 65535 to account for
+        possible sequence number wrap-around) is represented by a 16-bit
         packet metric block that contains the L, ECN, and ATO fields. If the
         number of 16-bit packet metric blocks included in the report block is
         not a multiple of two, then 16 bits of zero padding MUST be added after
