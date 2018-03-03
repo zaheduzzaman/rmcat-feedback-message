@@ -401,8 +401,9 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
 
    This document is an outcome of RMCAT design team discussion.  We
    would like to thank all participants specially Xiaoquing Zhu, Stefan
-   Holmer, David, Ingemar Johansson and Randell Jesup for their valuable
-   contribution to the discussions and to the document.
+   Holmer, David, Ingemar Johansson, Randell Jesup, Ingemar Johansson,
+   and Magnus Westerlund for their valuable contribution to the
+   discussions and to the document.
 
 7.  IANA Considerations
 
@@ -440,7 +441,6 @@ Internet-Draft     Congestion Control Feedback in RTCP        March 2018
               Jacobson, "RTP: A Transport Protocol for Real-Time
               Applications", STD 64, RFC 3550, DOI 10.17487/RFC3550,
               July 2003, <https://www.rfc-editor.org/info/rfc3550>.
-
 
 
 
