@@ -338,45 +338,47 @@
     </section>
 
     <section title="Design Rationale">
-      <t>The primary function of RTCP SR/RR packets is to report the reception 
-      quality of the RTP packets. The regular SR / RR
-      reports contain information about observed jitter, fractional packet
-      loss and cumulative packet loss. The original intent of this information
-      was to assist flow and congestion control mechanisms. Even though it is
-      possible to do congestion control based on information provided in the
-      SR/RR reports it is not sufficient to design an efficient congestion
-      control algorithm for interactive real-time communication. An efficient
-      congestion control algorithm requires more fine grain information on per
-      packet (see <xref target="feedback_message"></xref>) to react to the
-      congestion or to avoid funder congestion on the path.</t>
+      <t>The primary function of RTCP SR/RR packets is to report statistics
+      on the reception of RTP packets. The reception report blocks sent in
+      these packets contain information about observed jitter, fractional
+      packet loss, and cumulative packet loss. It was intended that this
+      information could be used to  support congestion control algorithms,
+      but experience has shown that it is not sufficient for that purpose.
+      An efficient congestion control algorithm requires more fine grained
+      information on per packet reception quality than is provided by SR/RR
+      packets to react effectively.</t> 
 
-      <t>Codec Control Message for AVPF <xref target="RFC5104"></xref> defines
-      Temporary Maximum Media Bit Rate (TMMBR) message which conveys a
-      temporary maximum bitrate limitation from the receiver of the RTP packets to
-      the sender of the RTP packets. Even though it is not designed to replace
-      congestion control, TMMBR has been used as a means to do receiver based
-      congestion control where the session bandwidth is high enough to send
-      frequent TMMBR messages especially with reduced sized reports <xref
-      target="RFC5506"></xref>. This requires the receiver of the RTP packets to
-      analyze the data reception, detect congestion level and recommend a
-      maximum bitrate suitable for current available bandwidth on the path
-      with an assumption that the sender of the RTP packets always honors the TMMBR
-      message. This requirement is completely opposite of the sender based
-      congestion control approach. Hence, TMMBR cannot be as a signaling means
-      for a sender based congestion control mechanism. However, TMMBR should
-      be viewed a complimentary signaling mechanism to establish receiver's
-      current view of acceptable maximum bitrate which a sender based
-      congestion control should honor.</t>
+      <t>The Codec Control Messages for the RTP/AVPF profile 
+      <xref target="RFC5104"></xref> include a Temporary Maximum Media Bit
+      Rate (TMMBR) message. This is used to convey a temporary maximum bit
+      rate limitation from a receiver of RTP packets to their sender. Even
+      though it was not designed to replace congestion control, TMMBR has
+      been used as a means to do receiver based congestion control where
+      the session bandwidth is high enough to send frequent TMMBR messages,
+      especially when used with non-compound RTCP packets <xref target="RFC5506"></xref>.
+      This approach requires the receiver of the RTP packets to monitor
+      their reception, determine the level of congestion, and recommend 
+      a maximum bit rate suitable for current available bandwidth on the
+      path; it also assumes that the RTP sender can/will respect that bit
+      rate.  This is the opposite of the sender based congestion control
+      approach suggested in this memo, so TMMBR cannot be used to convey
+      the information needed for a sender based congestion control.  TMMBR
+      could, however, be viewed a complementary mechanism that can inform
+      the sender of the receiver's current view of acceptable maximum bit
+      rate.</t>
 
-      <t>There are number of RTCP eXtended Report (XR) blocks have been
+      <t>Several RTCP eXtended Report (XR) blocks have been
       defined for reporting of delay, loss and ECN marking. It is possible to
       combine several XR blocks to report the loss and ECN marking at the cost
       of overhead and complexity. However, there is no existing RTCP XR block
       to report packet arrival time.</t>
 
-      <t>Considering the issues discussed here it is rational to design a new
-      congestion control feedback signaling mechanism for sender based
-      congestion control algorithm.</t>
+      <t>Considering these issues, we believe it appropriate to design a
+      new RTCP feedback mechanism to convey information for sender based
+      congestion control algorithms. The new congestion control feedback
+      RTCP packet described in <xref target="feedback_message"></xref>
+      provides such a mechanism.</t> 
+
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
