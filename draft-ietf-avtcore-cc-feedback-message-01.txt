@@ -588,8 +588,8 @@ Authors' Addresses
 
 
    Varun Singh
-   Nemu Dialogue Systems Oy
-   Runeberginkatu 4c A 4
+   CALLSTATS I/O Oy
+   Annankatu 31-33 C 42
    Helsinki  00100
    Finland
 
