@@ -370,6 +370,27 @@
       negotiated at session setup.</t>
     </section>
 
+    <section title="SDP Signalling">
+      <t>
+        A new "ack" feedback parameter, "ccfb", is defined to indicate
+        the use of the RTP Congestion Control feedback packet format
+        defined in <xref target="feedback_message"/>. The ABNF definition
+        of this SDP parameter extension is:
+      </t>
+      <figure>
+        <artwork><![CDATA[
+        rtcp-fb-ack-param = <See Section 4.2 of [RFC4584]>
+        rtcp-fb-ack-param =/ ccfb-par
+        ccfb-par          = SP "ccfb"
+        ]]></artwork>
+      </figure>
+ 
+      <t>
+        The offer/answer rules for these SDP feedback parameters are
+        specified in the RTP/AVPF profile <xref target="RFC4585"/>.
+      </t>
+    </section>
+
     <section title="Design Rationale">
       <t>The primary function of RTCP SR/RR packets is to report statistics
       on the reception of RTP packets. The reception report blocks sent in
@@ -431,7 +452,7 @@
       <t>
         The IANA is requested to register one new RTP/AVPF Transport-Layer
         Feedback Message in the table for FMT values for RTPFB Payload Types
-        <xref target="RFC4585"/> as defined in <xref target="sec:ccfb"/>.
+        <xref target="RFC4585"/> as defined in <xref target="sec:ccfb"/>:
       </t>
 
       <figure>
@@ -440,6 +461,21 @@
       Long name: RTP Congestion Control Feedback
       Value:     (to be assigned by IANA)
       Reference: (RFC number of this document, when published)
+        ]]></artwork>
+      </figure>
+
+      <t>
+        The IANA is also requested to register one new SDP "rtcp-fb" attribute
+        "ack" parameter, "ccfb", in the SDP ("ack" and "nack" Attribute Values)
+        registry:
+      </t>
+
+      <figure>
+        <artwork><![CDATA[
+      Value name:  ccfb
+      Long name:   Congestion Control Feedback
+      Usable with: ack
+      Reference:   (RFC number of this document, when published)
         ]]></artwork>
       </figure>
     </section>
