@@ -331,10 +331,13 @@
         account for wrap-around, MUST be ignored.</t>
 
         <t>If no packets are received from an SSRC in a reporting interval,
-        then no report block is sent for that SSRC. A regular SR/RR packet
-        SHOULD be sent instead, since the non-increased extended highest
-        sequence number received field of that SR/RR packet will inform the
-        sender that no packets have been received.</t>
+        a report block MAY be sent with begin_seq and end_seq+1 both set to
+        the highest sequence number previously received from that SSRC (or,
+        the report can simply to omitted). The corresponding SR/RR packet 
+        will have a non-increased extended highest sequence number received
+        field that will inform the sender that no packets have been received,
+        but it can ease processing to have that information available in the
+        congestion control feedback reports too.</t>
       </section>
     </section>
 
