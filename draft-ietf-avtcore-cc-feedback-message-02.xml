@@ -137,9 +137,9 @@
       <t>To help achieve interoperability for unicast RTP congestion control,
       this memo proposes a common RTCP feedback packet format that can be used by
       NADA <xref target="I-D.ietf-rmcat-nada"></xref>, SCReAM <xref
-      target="I-D.ietf-rmcat-scream-cc"></xref>, Google Congestion Control
+      target="RFC8298"></xref>, Google Congestion Control
       <xref target="I-D.ietf-rmcat-gcc"></xref> and Shared Bottleneck
-      Detection <xref target="I-D.ietf-rmcat-sbd"></xref>, and hopefully
+      Detection <xref target="RFC8382"></xref>, and hopefully
       also by future RTP congestion control algorithms.</t>
     </section>
 
@@ -157,9 +157,9 @@
 
     <section anchor="feedback_message" title="RTCP Feedback for Congestion Control">
       <t>Based on an analysis of NADA <xref target="I-D.ietf-rmcat-nada"></xref>,
-      SCReAM <xref target="I-D.ietf-rmcat-scream-cc"></xref>, Google
+      SCReAM <xref target="RFC8298"></xref>, Google
       Congestion Control <xref target="I-D.ietf-rmcat-gcc"></xref> and
-      Shared Bottleneck Detection <xref target="I-D.ietf-rmcat-sbd"></xref>,
+      Shared Bottleneck Detection <xref target="RFC8382"></xref>,
       the following per-RTP packet congestion control feedback information
       has been determined to be necessary:</t>
 
@@ -439,9 +439,9 @@
       <xref target="RFC3551"/>, <xref target="RFC3711"/>, or
       <xref target="RFC4585"/>), and the RTP congestion control algorithm
       that is in use (e.g., <xref target="I-D.ietf-rmcat-nada"/>,
-      <xref target="I-D.ietf-rmcat-scream-cc"/>,
+      <xref target="RFC8298"/>,
       <xref target="I-D.ietf-rmcat-gcc"/>, or
-      <xref target="I-D.ietf-rmcat-sbd"/>) apply.</t>
+      <xref target="RFC8382"/>) apply.</t>
 
       <t>A receiver that intentionally generates inaccurate RTCP congestion
       control feedback reports might be able trick the sender into sending
@@ -463,6 +463,8 @@
     <references title="Normative References">
       <?rfc include='reference.RFC.2119'?>
 
+      <?rfc include='reference.RFC.3168'?>
+
       <?rfc include='reference.RFC.3550'?>
 
       <?rfc include='reference.RFC.3551'?>
@@ -477,8 +479,6 @@
 
       <?rfc include='reference.RFC.5506'?>
 
-      <?rfc include='reference.RFC.3168'?>
-
       <?rfc include='reference.RFC.6679'?>
 
       <?rfc include='reference.I-D.ietf-rmcat-rtp-cc-feedback'?>
@@ -487,15 +487,15 @@
     <references title="Informative References">
       <?rfc include='reference.I-D.ietf-rmcat-nada'?>
 
-      <?rfc include="reference.I-D.ietf-rmcat-scream-cc"?>
-
       <?rfc include="reference.I-D.ietf-rmcat-gcc"?>
-
-      <?rfc include="reference.I-D.ietf-rmcat-sbd"?>
 
       <?rfc include='reference.RFC.5104'?>
 
       <?rfc include='reference.RFC.6843'?>
+
+      <?rfc include="reference.RFC.8298"?>
+
+      <?rfc include="reference.RFC.8382"?>
 
       <reference anchor="feedback-requirements"
                  target="://www.ietf.org/proceedings/95/slides/slides-95-rmcat-1.pdf">
