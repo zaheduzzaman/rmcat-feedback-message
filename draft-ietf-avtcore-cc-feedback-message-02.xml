@@ -268,6 +268,9 @@
         block is not a multiple of two, then 16 bits of zero padding MUST be
         added after the last packet metric block, to align the end of the
         packet metric blocks with the next 32 bit boundary. 
+        Each report block MUST NOT include more than 16384 packet metric blocks
+        (i.e., it MUST NOT report on more than one quarter of the sequence
+        number space in a single report).
         </t>
 
         <t>
@@ -416,8 +419,8 @@
 
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>This document is an outcome of RMCAT design team discussion. We would
-      like to thank all participants specially Xiaoquing Zhu, Stefan Holmer,
-      David, Ingemar Johansson, Randell Jesup, Ingemar Johansson, and Magnus
+      like to thank all participants specially Sergio Mena, Xiaoquing Zhu, Stefan
+      Holmer, David, Ingemar Johansson, Randell Jesup, Ingemar Johansson, and Magnus
       Westerlund for their valuable contribution to the discussions and to the
       document.</t>
     </section>
