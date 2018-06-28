@@ -225,7 +225,7 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                   SSRC of 1st RTP Stream                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |          begin_seq            |             end_seq           |
+    |          begin_seq            |            end_seq+1          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |L|ECN|  Arrival time offset    | ...                           .
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -235,7 +235,7 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                   SSRC of nth RTP Stream                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |          begin_seq            |             end_seq           |
+    |          begin_seq            |            end_seq+1          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |L|ECN|  Arrival time offset    | ...                           |
     .                                                               .
@@ -260,15 +260,19 @@
         by a Report Timestamp.</t>
      
         <t>Each report block begins with the SSRC of the received RTP Stream
-        on which it is reporting. Following this, each sequence number between
-        the begin_seq and end_seq (both inclusive; modulo 65535 to account for
-        possible sequence number wrap-around) is represented by a 16-bit
-        packet metric block that contains the L, ECN, and ATO fields. If the
-        number of 16-bit packet metric blocks included in the report block is
-        not a multiple of two, then 16 bits of zero padding MUST be added after
-        the last packet metric block, to align the end of the packet metric
-        blocks with the next 32 bit boundary. In each packet metric block,
-        the L, ECN, and ATO fields are as follows:
+        on which it is reporting. Following this, the report block contains a
+        16-bit packet metric block for each RTP packet with sequence number,
+        seq, in the range begin_seq &lt;= seq &lt; end_seq+1 (calculated using
+        arithmetic modulo 65535 to account for possible sequence number wrap-around). 
+        If the number of 16-bit packet metric blocks included in the report
+        block is not a multiple of two, then 16 bits of zero padding MUST be
+        added after the last packet metric block, to align the end of the
+        packet metric blocks with the next 32 bit boundary. 
+        </t>
+
+        <t>
+        The contents of each 16-bit packet metric block comprises the L, ECN,
+        and ATO fields are as follows:
           <list style="symbols">
             <t>
               L (1 bit): is a boolean to indicate if the packet was
