@@ -428,9 +428,20 @@
     <!-- Possibly a 'Contributors' section ... -->
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to assign a new value in the "FMT Values for RTPFB 
-        Payload Types" registry for the CCFB transport layer feedback packet
-        described in <xref target="sec:ccfb"/>.</t>
+      <t>
+        The IANA is requested to register one new RTP/AVPF Transport-Layer
+        Feedback Message in the table for FMT values for RTPFB Payload Types
+        <xref target="RFC4585"/> as defined in <xref target="sec:ccfb"/>.
+      </t>
+
+      <figure>
+        <artwork><![CDATA[
+      Name:      CCFB
+      Long name: RTP Congestion Control Feedback
+      Value:     (to be assigned by IANA)
+      Reference: (RFC number of this document, when published)
+        ]]></artwork>
+      </figure>
     </section>
 
     <section anchor="Security" title="Security Considerations">
