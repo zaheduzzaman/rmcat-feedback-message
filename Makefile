@@ -1,4 +1,4 @@
-VERSION = 02
+VERSION = 03
 
 DRAFTS = draft-ietf-avtcore-cc-feedback-message-$(VERSION).pdf \
          draft-ietf-avtcore-cc-feedback-message-$(VERSION).txt 
