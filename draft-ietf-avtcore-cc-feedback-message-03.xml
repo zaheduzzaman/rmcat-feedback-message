@@ -378,14 +378,14 @@
 
     <section title="SDP Signalling">
       <t>
-        A new "ack" feedback parameter, "ccfb", is defined to indicate
-        the use of the RTP Congestion Control feedback packet format
-        defined in <xref target="feedback_message"/>. The ABNF definition
-        of this SDP parameter extension is:
+        A new "ack" feedback parameter, "ccfb", is defined for use with the
+        "a=rtcp-fb:" SDP extension to indicate the use of the RTP Congestion
+        Control feedback packet format defined in <xref target="feedback_message"/>.
+        The ABNF definition of this SDP parameter extension is:
       </t>
       <figure>
         <artwork><![CDATA[
-        rtcp-fb-ack-param = <See Section 4.2 of [RFC4584]>
+        rtcp-fb-ack-param = <See Section 4.2 of [RFC4585]>
         rtcp-fb-ack-param =/ ccfb-par
         ccfb-par          = SP "ccfb"
         ]]></artwork>
@@ -393,7 +393,9 @@
  
       <t>
         The offer/answer rules for these SDP feedback parameters are
-        specified in the RTP/AVPF profile <xref target="RFC4585"/>.
+        specified in Section 4.2 of the RTP/AVPF profile <xref target="RFC4585"/>.
+        When used with "ccfb" feedback, the wildcard payload type ("*") MUST
+        be used.
       </t>
     </section>
 
