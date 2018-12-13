@@ -322,17 +322,17 @@
 
         <t>RTCP congestion control feedback packets SHOULD include a report
         block for each SSRC that is being congestion controlled. The sequence
-        number ranges reported on in consecutive reports for an SSRC SHOULD
-        be consecutive and SHOULD NOT overlap (i.e., begin_seq for a report
-        is expected to equal, modulo 65536, begin_seq+num_reports from the
-        previous report for that SSRC). If overlapping reports are sent, the
-        information in the later report updates that in any previous reports
-        for packets included in both reports (although note that such updated
-        information will likely arrive too late to affect congestion control
-        decisions at the sender).
-        If a packet was reported as received in a report, that packet MUST
-        also be reported as received in any overlapping reports sent later
-        that cover its sequence number range.
+        number ranges reported on in consecutive reports for a given SSRC will
+        generally be contiguous, but overlapping reports MAY be sent (and need
+        to be sent in cases where RTP packet reordering occurs across the
+        boundary between consecutive reports).
+        If reports covering overlapping sequence number ranges are sent,
+        information in later reports updates that in sent previous reports
+        for RTP packets included in both reports.
+        If an RTP packet was reported as received in one report, that packet
+        MUST also be reported as received in any overlapping reports sent
+        later that cover its sequence number range.</t>
+
         Reports that cover RTP sequence number
         ranges that are more than 16384 (i.e., one quarter of the sequence
         number space) ahead of the last begin_seq+num_reports received from an SSRC, or
