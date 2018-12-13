@@ -333,6 +333,12 @@
         MUST also be reported as received in any overlapping reports sent
         later that cover its sequence number range.</t>
 
+        <t>If duplicate copies of a particular RTP packet are received, then the
+        arrival time of the first copy to arrive MUST be reported. If any of the
+        copies of the duplicated packet are ECN-CE marked, then an ECN-CE mark
+        MUST be reported that for packet; otherwise the ECN mark of the first
+        copy to arrive is reported.</t>
+
         <t>If no packets are received from an SSRC in a reporting interval,
         a report block MAY be sent with begin_seq set to the highest sequence
         number previously received from that SSRC and num_reports set to zero
