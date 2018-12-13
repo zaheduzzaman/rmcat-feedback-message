@@ -299,8 +299,8 @@
               feedback report. The ATO field is in units of 1/1024 seconds
               (this unit is chosen to give exact offsets from the RTS field)
               so, for example, an ATO value of 512 indicates that the
-              corresponding RTP packet arrived exactly half-a-second before
-              to the time instant represented by the RTS field.
+              corresponding RTP packet arrived exactly half a second before
+              the time instant represented by the RTS field.
               If the measured value is greater than 8189/1024 seconds (the
               value that would be coded as 0x1FFD), the value 0x1FFE MUST
               be reported to indicate an over-range measurement.
