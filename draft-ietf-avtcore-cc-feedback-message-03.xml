@@ -399,6 +399,31 @@
       </t>
     </section>
 
+    <section title="Relation to RFC 6679">
+      <t>
+        Use of Explicit Congestion Notification (ECN) with RTP is
+        described in <xref target="RFC6679"/>. That specifies how
+        to negotiate the use of ECN with RTP, and defines an RTCP ECN
+        Feedback Packet to carry ECN feedback reports. It uses an SDP
+        "a=ecn-capaable-rtp:" attribute to negotiate use of ECN, and
+        the "a=rtcp-fb:" attributes with the "nack" parameter "ecn" to
+        negotiate the use of RTCP ECN Feedback Packets.
+      </t>
+
+      <t>
+        The RTCP ECN Feedback Packet is not useful when ECN is used with
+        the RTP Congestion Control Feedback Packet defined in this memo
+        since it provides duplicate information. Accordingly, when 
+        congestion control feedback is to be used with RTP and ECN,
+        the SDP offer generated MUST include an "a=ecn-capable-rtp:"
+        attribute to negotiate ECN support, along with an "a=rtcp-fb:"
+        attribute with the "ack" parameter "ccfb" to indicate that the
+        RTP Congestion Control Feedback Packet is to be used for feedback. 
+        The "a=rtcp-fb:" attribute MUST NOT include the "nack" parameter
+        "ecn", so the RTCP ECN Feedback Packet will not be used.
+      </t>
+    </section>
+
     <section title="Design Rationale">
       <t>The primary function of RTCP SR/RR packets is to report statistics
       on the reception of RTP packets. The reception report blocks sent in
