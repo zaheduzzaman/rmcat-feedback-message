@@ -225,7 +225,7 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                   SSRC of 1st RTP Stream                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |          begin_seq            |            end_seq+1          |
+    |          begin_seq            |          num_reports          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |L|ECN|  Arrival time offset    | ...                           .
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -235,7 +235,7 @@
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                   SSRC of nth RTP Stream                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |          begin_seq            |            end_seq+1          |
+    |          begin_seq            |          num_reports          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |L|ECN|  Arrival time offset    | ...                           |
     .                                                               .
@@ -261,13 +261,15 @@
      
         <t>Each report block begins with the SSRC of the received RTP Stream
         on which it is reporting. Following this, the report block contains a
-        16-bit packet metric block for each RTP packet with sequence number,
-        seq, in the range begin_seq &lt;= seq &lt; end_seq+1 (calculated using
+        16-bit packet metric block for each RTP packet with sequence number
+        in the range begin_seq to begin_seq+num_reports inclusive (calculated using
         arithmetic modulo 65536 to account for possible sequence number wrap-around). 
         If the number of 16-bit packet metric blocks included in the report
         block is not a multiple of two, then 16 bits of zero padding MUST be
         added after the last packet metric block, to align the end of the
-        packet metric blocks with the next 32 bit boundary. 
+        packet metric blocks with the next 32 bit boundary.
+        The value of num_reports MAY be zero, indicating that there are no
+        packet metric blocks included for that SSRC.
         Each report block MUST NOT include more than 16384 packet metric blocks
         (i.e., it MUST NOT report on more than one quarter of the sequence
         number space in a single report).
@@ -322,14 +324,14 @@
         block for each SSRC that is being congestion controlled. The sequence
         number ranges reported on in consecutive reports for an SSRC SHOULD
         be consecutive and SHOULD NOT overlap (i.e., begin_seq for a report
-        is expected to be one greater, modulo 65536, than end_seq of the
+        is expected to equal, modulo 65536, begin_seq+num_reports from the
         previous report for that SSRC). If overlapping reports are sent, the
         information in the later report updates that in any previous reports
         for packets included in both reports (although note that such updated
         information will likely arrive too late to affect congestion control
         decisions at the sender).  Reports that cover RTP sequence number
         ranges that are more than 16384 (i.e., one quarter of the sequence
-        number space) ahead of the last end_seq received from an SSRC, or
+        number space) ahead of the last begin_seq+num_reports received from an SSRC, or
         behind the last begin_seq received from an SSRC, modulo 65536 to
         account for wrap-around, SHOULD be ignored. An exception to this
         occurs if sender has sent RTP packets using more than one quarter
@@ -338,9 +340,9 @@
         ought to be accepted, to allow recovery from report packet loss.</t>
 
         <t>If no packets are received from an SSRC in a reporting interval,
-        a report block MAY be sent with begin_seq and end_seq+1 both set to
-        the highest sequence number previously received from that SSRC (or,
-        the report can simply to omitted). The corresponding SR/RR packet 
+        a report block MAY be sent with begin_seq set to the highest sequence
+        number previously received from that SSRC and num_reports set to zero
+        (or, the report can simply to omitted). The corresponding SR/RR packet 
         will have a non-increased extended highest sequence number received
         field that will inform the sender that no packets have been received,
         but it can ease processing to have that information available in the
