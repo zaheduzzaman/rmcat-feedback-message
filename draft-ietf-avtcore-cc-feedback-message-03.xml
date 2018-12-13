@@ -445,11 +445,20 @@
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>This document is an outcome of RMCAT design team discussion. We would
-      like to thank all participants specially Sergio Mena, Xiaoquing Zhu, Stefan
-      Holmer, David, Ingemar Johansson, Randell Jesup, Ingemar Johansson, and Magnus
-      Westerlund for their valuable contribution to the discussions and to the
-      document.</t>
+      <t>This document is based on the outcome of a design team discussion
+      in the RTP Media Congestion Avoidance Techniques (RMCAT) working group.
+      The authors would like to thank
+      David Hayes,
+      Stefan Holmer,
+      Randell Jesup,
+      Ingemar Johansson,
+      Jonathan Lennox,
+      Sergio Mena,
+      Nils Ohlmeier,
+      Magnus Westerlund,
+      and
+      Xiaoqing Zhu
+      for their valuable feedback.</t>
     </section>
 
     <!-- Possibly a 'Contributors' section ... -->
