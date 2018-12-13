@@ -329,7 +329,11 @@
         information in the later report updates that in any previous reports
         for packets included in both reports (although note that such updated
         information will likely arrive too late to affect congestion control
-        decisions at the sender).  Reports that cover RTP sequence number
+        decisions at the sender).
+        If a packet was reported as received in a report, that packet MUST
+        also be reported as received in any overlapping reports sent later
+        that cover its sequence number range.
+        Reports that cover RTP sequence number
         ranges that are more than 16384 (i.e., one quarter of the sequence
         number space) ahead of the last begin_seq+num_reports received from an SSRC, or
         behind the last begin_seq received from an SSRC, modulo 65536 to
