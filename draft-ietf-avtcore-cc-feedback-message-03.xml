@@ -321,7 +321,7 @@
         described in Section 4 of <xref target="RFC3550"></xref>.</t>
 
         <t>RTCP congestion control feedback packets SHOULD include a report
-        block for each SSRC that is being congestion controlled. The sequence
+        block for every active SSRC. The sequence
         number ranges reported on in consecutive reports for a given SSRC will
         generally be contiguous, but overlapping reports MAY be sent (and need
         to be sent in cases where RTP packet reordering occurs across the
