@@ -294,20 +294,19 @@
 
             <t>
               Arrival time offset (ATO, 13 bits): is the arrival time of
-              the RTP packet at the receiver. It is measured as an offset
-              from the time at which the RTCP congestion control feedback
-              report packet is sent. The arrival time offset is calculated
-              by subtracting the reception time of the RTP packet denoted
-              by this 16 bit packet metric block from the Report Timestamp
-              (RTS) field of the RTCP congestion control feedback report
-              packet in which the packet metric report block is contained.
-              The arrival time offset is measured in units of 1/1024 seconds
-              (this unit is chosen to give exact offsets from the RTS field).
+              the RTP packet at the receiver, as an offset before the time
+              represented by the RTS field of this RTCP congestion control
+              feedback report. The ATO field is in units of 1/1024 seconds
+              (this unit is chosen to give exact offsets from the RTS field)
+              so, for example, an ATO value of 512 indicates that the
+              corresponding RTP packet arrived exactly half-a-second before
+              to the time instant represented by the RTS field.
               If the measured value is greater than 8189/1024 seconds (the
               value that would be coded as 0x1FFD), the value 0x1FFE MUST
-              be reported to indicate an over-range positive measurement.
-              If the measurement is unavailable, the value 0x1FFF MUST
-              be reported.
+              be reported to indicate an over-range measurement.
+              If the measurement is unavailable, or if the arrival time of
+              the RTP packet is after the time represented by the RTS field,
+              then an ATO value of 0x1FFF MUST be reported for the packet.
             </t>
           </list>
         </t>
