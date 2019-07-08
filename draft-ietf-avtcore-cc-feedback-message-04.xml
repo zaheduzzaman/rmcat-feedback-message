@@ -333,6 +333,15 @@
         MUST also be reported as received in any overlapping reports sent
         later that cover its sequence number range.</t>
 
+        <t>RTCP congestion control feedback packets can be large if they are
+        sent infrequently relative to the number of RTP data packets.  If an
+        RTCP congestion control feedback packet is too large to fit within the
+        path MTU, its sender SHOULD split it into multiple feedback packets.
+        The RTCP reporting interval SHOULD be chosen such that feedback packets
+        are sent often enough that they are small enough to fit within the path
+        MTU (<xref target="I-D.ietf-rmcat-rtp-cc-feedback"/> provides guidance
+        on how to choose the reporting interval).</t>
+
         <t>If duplicate copies of a particular RTP packet are received, then the
         arrival time of the first copy to arrive MUST be reported. If any of the
         copies of the duplicated packet are ECN-CE marked, then an ECN-CE mark
