@@ -391,6 +391,24 @@
       negotiated at session setup.</t>
     </section>
 
+    <section title="Response to Loss of Feedback Packets">
+      <t>
+        Like all RTCP packets, RTCP congestion control feedback packets
+        might be lost. All RTP congestion control algorithms MUST specify
+        how they respond to the loss of feedback packets.
+      </t>
+
+      <t>
+        If only a single congestion control feedback packet is lost, an
+        appropriate response is to assume that the level of congestion
+        has remained roughly the same as the previous report. However,
+        if multiple consecutive congestion control feedback packets are
+        lost, the sender SHOULD rapidly reduce its sending rate towards
+        zero, as this likely indicates a path failure. The RTP circuit
+        breaker <xref target="RFC8083"/> provides further guidance.
+      </t>
+    </section>
+
     <section title="SDP Signalling">
       <t>
         A new "ack" feedback parameter, "ccfb", is defined for use with the
@@ -613,6 +631,8 @@
       <?rfc include='reference.RFC.5506'?>
 
       <?rfc include='reference.RFC.6679'?>
+
+      <?rfc include='reference.RFC.8083'?>
 
       <?rfc include='reference.I-D.ietf-rmcat-rtp-cc-feedback'?>
 
