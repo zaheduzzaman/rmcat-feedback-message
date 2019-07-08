@@ -95,7 +95,7 @@
       </address>
     </author>
 
-    <date day="7" month="July" year="2019" />
+    <date day="8" month="July" year="2019" />
 
     <area>Transport</area>
 
@@ -390,12 +390,19 @@
         ccfb-par          = SP "ccfb"
         ]]></artwork>
       </figure>
- 
+      <t>
+        When used with "ccfb" feedback, the wildcard payload type ("*") MUST
+        be used. An example of the resulting SDP attribute is:
+      </t>
+      <figure>
+        <artwork><![CDATA[
+        a=rtcp-fb:* ack ccfb
+        ]]></artwork>
+      </figure>
+
       <t>
         The offer/answer rules for these SDP feedback parameters are
         specified in Section 4.2 of the RTP/AVPF profile <xref target="RFC4585"/>.
-        When used with "ccfb" feedback, the wildcard payload type ("*") MUST
-        be used.
       </t>
     </section>
 
