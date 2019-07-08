@@ -347,6 +347,12 @@
         field that will inform the sender that no packets have been received,
         but it can ease processing to have that information available in the
         congestion control feedback reports too.</t>
+
+        <t>A report block indicating that certain RTP packets were lost is
+        not to be interpreted as a request to retransmit the lost packets.
+        The receiver of such a report might choose to retransmit such packets,
+        provided a retransmission payload format has been negotiated, but
+        there is no requirement that it do so.</t>
       </section>
     </section>
 
