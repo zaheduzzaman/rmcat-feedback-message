@@ -392,7 +392,10 @@
       </figure>
       <t>
         When used with "ccfb" feedback, the wildcard payload type ("*") MUST
-        be used. An example of the resulting SDP attribute is:
+        be used. This implies that the congestion control feedback is sent
+        for all payload types in use in the session, including any FEC and
+        retransmission payload types.
+        An example of the resulting SDP attribute is:
       </t>
       <figure>
         <artwork><![CDATA[
