@@ -407,6 +407,12 @@
         The offer/answer rules for these SDP feedback parameters are
         specified in Section 4.2 of the RTP/AVPF profile <xref target="RFC4585"/>.
       </t>
+
+      <t>
+        When the SDP BUNDLE extension <xref target="I-D.ietf-mmusic-sdp-bundle-negotiation"/>
+        is used for multiplexing, the "a=rtcp-fb:" attribute has multiplexing category
+        IDENTICAL-PER-PT <xref target="I-D.ietf-mmusic-sdp-mux-attributes"/>.
+      </t>
     </section>
 
     <section title="Relation to RFC 6679">
@@ -581,6 +587,10 @@
       <?rfc include='reference.RFC.6679'?>
 
       <?rfc include='reference.I-D.ietf-rmcat-rtp-cc-feedback'?>
+
+      <?rfc include='reference.I-D.ietf-mmusic-sdp-bundle-negotiation'?>
+
+      <?rfc include='reference.I-D.ietf-mmusic-sdp-mux-attributes'?>
     </references>
 
     <references title="Informative References">
