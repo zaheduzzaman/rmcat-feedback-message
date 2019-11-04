@@ -533,6 +533,25 @@
           in terms of bandwidth and complexity, due to the need to stack
           multiple reports.</t>
 
+          <t hangText="Transport-wide Congestion Control:">The format
+          defined in this memo provides individual feedback on each SSRC.
+          An alternative is to add a header extension to each RTP packet,
+          containing a single, transport-wide, packet sequence number,
+          then have the receiver send RTCP reports giving feedback on
+          these additional sequence numbers
+          <xref target="I-D.holmer-rmcat-transport-wide-cc-extensions"/>.
+          Such an approach adds the per-packet overhead of the header
+          extension (8 octets per packet in the referenced format),
+          but reduces the size of the feedback packets, and can simplify
+          the rate calculation at the sender if it maintains a single
+          rate limit that applies to all RTP packets sent irrespective
+          of their SSRC. Equally, the use of transport-wide feedback makes
+          it more difficult to adapt the sending rate, or respond to lost
+          packets, based on the reception and/or loss patterns observed
+          on a per-SSRC basis. Transport-wide feedback is also a less
+          natural fit with the wider RTP framework, that makes use of
+          per-SSRC sequence numbers and feedback.</t>
+
         </list>
       </t>
 
@@ -664,6 +683,8 @@
       <?rfc include="reference.RFC.8298"?>
 
       <?rfc include="reference.RFC.8382"?>
+
+      <?rfc include="reference.I-D.holmer-rmcat-transport-wide-cc-extensions"?>
 
       <reference anchor="feedback-requirements"
                  target="://www.ietf.org/proceedings/95/slides/slides-95-rmcat-1.pdf">
