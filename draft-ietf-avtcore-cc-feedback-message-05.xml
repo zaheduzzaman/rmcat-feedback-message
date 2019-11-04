@@ -551,9 +551,12 @@
           of their SSRC. Equally, the use of transport-wide feedback makes
           it more difficult to adapt the sending rate, or respond to lost
           packets, based on the reception and/or loss patterns observed
-          on a per-SSRC basis. Transport-wide feedback is also a less
-          natural fit with the wider RTP framework, that makes use of
-          per-SSRC sequence numbers and feedback.</t>
+          on a per-SSRC basis (for example, to perform differential rate
+          control and repair for audio and video flows, based on knowledge
+          of what packets from each flow were lost). Transport-wide 
+          feedback is also a less natural fit with the wider RTP framework,
+          which makes extensive use of per-SSRC sequence numbers and
+          feedback.</t>
 
         </list>
       </t>
