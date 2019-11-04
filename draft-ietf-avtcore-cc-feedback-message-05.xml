@@ -495,35 +495,46 @@
       but experience has shown that it is not sufficient for that purpose.
       An efficient congestion control algorithm requires more fine grained
       information on per packet reception quality than is provided by SR/RR
-      packets to react effectively.</t> 
+      packets to react effectively. The feedback format defined in this memo
+      provides such fine grained feedback.</t> 
 
-      <t>The Codec Control Messages for the RTP/AVPF profile 
-      <xref target="RFC5104"></xref> include a Temporary Maximum Media Bit
-      Rate (TMMBR) message. This is used to convey a temporary maximum bit
-      rate limitation from a receiver of RTP packets to their sender. Even
-      though it was not designed to replace congestion control, TMMBR has
-      been used as a means to do receiver based congestion control where
-      the session bandwidth is high enough to send frequent TMMBR messages,
-      especially when used with non-compound RTCP packets <xref target="RFC5506"></xref>.
-      This approach requires the receiver of the RTP packets to monitor
-      their reception, determine the level of congestion, and recommend 
-      a maximum bit rate suitable for current available bandwidth on the
-      path; it also assumes that the RTP sender can/will respect that bit
-      rate.  This is the opposite of the sender based congestion control
-      approach suggested in this memo, so TMMBR cannot be used to convey
-      the information needed for a sender based congestion control.  TMMBR
-      could, however, be viewed a complementary mechanism that can inform
-      the sender of the receiver's current view of acceptable maximum bit
-      rate.</t>
+      <t>Several other RTCP extensions also provide more detailed feedback
+      than SR/RR packets:</t>
 
-      <t>A number of RTCP eXtended Report (XR) blocks have previously been
-      defined to report details of packet loss, arrival times <xref target="RFC3611"/>, 
-      delay <xref target="RFC6843"/>, and ECN marking <xref target="RFC6679"/>. 
-      It is possible to combine several such XR blocks to report the
-      detailed loss, arrival time, and ECN marking marking information
-      needed for effective sender-based congestion control. However, the
-      result has high overhead both in terms of bandwidth and complexity,
-      due to the need to stack multiple reports.</t>
+      <t>
+        <list style="hanging">
+          <t hangText="TMMBR:">The Codec Control Messages for the RTP/AVPF profile 
+          <xref target="RFC5104"></xref> include a Temporary Maximum Media Bit
+          Rate (TMMBR) message. This is used to convey a temporary maximum bit
+          rate limitation from a receiver of RTP packets to their sender. Even
+          though it was not designed to replace congestion control, TMMBR has
+          been used as a means to do receiver based congestion control where
+          the session bandwidth is high enough to send frequent TMMBR messages,
+            especially when used with non-compound RTCP packets <xref target="RFC5506"></xref>.
+          This approach requires the receiver of the RTP packets to monitor
+          their reception, determine the level of congestion, and recommend 
+          a maximum bit rate suitable for current available bandwidth on the
+          path; it also assumes that the RTP sender can/will respect that bit
+          rate.  This is the opposite of the sender based congestion control
+          approach suggested in this memo, so TMMBR cannot be used to convey
+          the information needed for a sender based congestion control.  TMMBR
+          could, however, be viewed a complementary mechanism that can inform
+          the sender of the receiver's current view of acceptable maximum bit
+          rate.</t>
+
+          <t hangText="RTCP Extended Reports (XR):">Numerous RTCP extended
+          report (XR) blocks have been defined to report details of packet
+          loss, arrival times <xref target="RFC3611"/>, delay 
+          <xref target="RFC6843"/>, and ECN marking <xref target="RFC6679"/>. 
+          It is possible to combine several such XR blocks into a compound
+          RTCP packet, to report the detailed loss, arrival time, and ECN
+          marking marking information needed for effective sender-based
+          congestion control. However, the result has high overhead both
+          in terms of bandwidth and complexity, due to the need to stack
+          multiple reports.</t>
+
+        </list>
+      </t>
 
       <t>Considering these issues, we believe it appropriate to design a
       new RTCP feedback mechanism to convey information for sender based
