@@ -9,7 +9,6 @@ Expires: May 7, 2020                               University of Glasgow
                                                                 V. Singh
                                                             callstats.io
                                                               M. Ramalho
-                                                           Cisco Systems
                                                         November 4, 2019
 
 
@@ -50,6 +49,7 @@ Copyright Notice
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
 
 
 
@@ -58,7 +58,6 @@ Sarker, et al.             Expires May 7, 2020                  [Page 1]
 Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
 
-   publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
@@ -72,17 +71,17 @@ Table of Contents
    3.  RTCP Feedback for Congestion Control  . . . . . . . . . . . .   3
      3.1.  RTCP Congestion Control Feedback Report . . . . . . . . .   4
    4.  Feedback Frequency and Overhead . . . . . . . . . . . . . . .   7
-   5.  Response to Loss of Feedback Packets  . . . . . . . . . . . .   8
+   5.  Response to Loss of Feedback Packets  . . . . . . . . . . . .   7
    6.  SDP Signalling  . . . . . . . . . . . . . . . . . . . . . . .   8
-   7.  Relation to RFC 6679  . . . . . . . . . . . . . . . . . . . .   9
+   7.  Relation to RFC 6679  . . . . . . . . . . . . . . . . . . . .   8
    8.  Design Rationale  . . . . . . . . . . . . . . . . . . . . . .   9
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
    11. Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  11
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -105,7 +104,8 @@ Table of Contents
    algorithms), it is highly desirable to have generic congestion
    control feedback format.
 
-
+   To help achieve interoperability for unicast RTP congestion control,
+   this memo proposes a common RTCP feedback packet format that can be
 
 
 
@@ -114,8 +114,6 @@ Sarker, et al.             Expires May 7, 2020                  [Page 2]
 Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
 
-   To help achieve interoperability for unicast RTP congestion control,
-   this memo proposes a common RTCP feedback packet format that can be
    used by NADA [I-D.ietf-rmcat-nada], SCReAM [RFC8298], Google
    Congestion Control [I-D.ietf-rmcat-gcc] and Shared Bottleneck
    Detection [RFC8382], and hopefully also by future RTP congestion
@@ -162,6 +160,8 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
    As a practical matter, we note that host operating system (OS)
    process interruptions can occur at inopportune times.  Accordingly,
+   recording RTP packet send times at the sender, and the corresponding
+   RTP packet arrival times at the receiver, needs to be done with
 
 
 
@@ -170,8 +170,6 @@ Sarker, et al.             Expires May 7, 2020                  [Page 3]
 Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
 
-   recording RTP packet send times at the sender, and the corresponding
-   RTP packet arrival times at the receiver, needs to be done with
    deliberate care.  This is because the time duration of host OS
    interruptions can be significant relative to the precision desired in
    the one-way delay estimates.  Specifically, the send time needs to be
@@ -190,41 +188,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    Irrespective of how it is transported, the congestion control
    feedback is sent as a Transport Layer Feedback Message (RTCP packet
    type 205).  The format of this RTCP packet is shown in Figure 1:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 4]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
         0                   1                   2                   3
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -256,6 +219,13 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
          Figure 1: RTCP Congestion Control Feedback Packet Format
 
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 4]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    The first eight octets comprise a standard RTCP header, with PT=205
    and FMT=CCFB indicating that this is a congestion control feedback
    packet, and with the SSRC set to that of the sender of the RTCP
@@ -274,14 +244,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    in the range begin_seq to begin_seq+num_reports inclusive (calculated
    using arithmetic modulo 65536 to account for possible sequence number
    wrap-around).  If the number of 16-bit packet metric blocks included
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 5]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
-
    in the report block is not a multiple of two, then 16 bits of zero
    padding MUST be added after the last packet metric block, to align
    the end of the packet metric blocks with the next 32 bit boundary.
@@ -312,6 +274,14 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
       exactly half a second before the time instant represented by the
       RTS field.  If the measured value is greater than 8189/1024
       seconds (the value that would be coded as 0x1FFD), the value
+
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 5]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
       0x1FFE MUST be reported to indicate an over-range measurement.  If
       the measurement is unavailable, or if the arrival time of the RTP
       packet is after the time represented by the RTS field, then an ATO
@@ -330,14 +300,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    block for every active SSRC.  The sequence number ranges reported on
    in consecutive reports for a given SSRC will generally be contiguous,
    but overlapping reports MAY be sent (and need to be sent in cases
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 6]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
-
    where RTP packet reordering occurs across the boundary between
    consecutive reports).  If reports covering overlapping sequence
    number ranges are sent, information in later reports updates that in
@@ -367,6 +329,15 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    (or, the report can simply to omitted).  The corresponding SR/RR
    packet will have a non-increased extended highest sequence number
    received field that will inform the sender that no packets have been
+
+
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 6]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    received, but it can ease processing to have that information
    available in the congestion control feedback reports too.
 
@@ -385,14 +356,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    make appropriate use of the reporting block described in this memo.
    Specifications for RTP congestion control algorithms can also provide
    guidance.
-
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 7]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
    It is a general understanding that the congestion control algorithms
    will work better with more frequent feedback - per packet feedback.
@@ -424,6 +387,13 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    this likely indicates a path failure.  The RTP circuit breaker
    [RFC8083] provides further guidance.
 
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 7]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
 6.  SDP Signalling
 
    A new "ack" feedback parameter, "ccfb", is defined for use with the
@@ -442,13 +412,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    attribute is:
 
            a=rtcp-fb:* ack ccfb
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 8]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
    The offer/answer rules for these SDP feedback parameters are
    specified in Section 4.2 of the RTP/AVPF profile [RFC4585].
@@ -479,6 +442,14 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
    The RTCP ECN Feedback Packet is not useful when ECN is used with the
    RTP Congestion Control Feedback Packet defined in this memo since it
+
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 8]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    provides duplicate information.  Accordingly, when congestion control
    feedback is to be used with RTP and ECN, the SDP offer generated MUST
    include an "a=ecn-capable-rtp:" attribute to negotiate ECN support,
@@ -498,14 +469,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    but experience has shown that it is not sufficient for that purpose.
    An efficient congestion control algorithm requires more fine grained
    information on per packet reception quality than is provided by SR/RR
-
-
-
-Sarker, et al.             Expires May 7, 2020                  [Page 9]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
-
    packets to react effectively.  The feedback format defined in this
    memo provides such fine grained feedback.
 
@@ -535,6 +498,14 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
 
    RTCP Extended Reports (XR):  Numerous RTCP extended report (XR)
       blocks have been defined to report details of packet loss, arrival
+
+
+
+Sarker, et al.             Expires May 7, 2020                  [Page 9]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
       times [RFC3611], delay [RFC6843], and ECN marking [RFC6679].  It
       is possible to combine several such XR blocks into a compound RTCP
       packet, to report the detailed loss, arrival time, and ECN marking
@@ -554,14 +525,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
       of the feedback packets, and can simplify the rate calculation at
       the sender if it maintains a single rate limit that applies to all
       RTP packets sent irrespective of their SSRC.  Equally, the use of
-
-
-
-Sarker, et al.             Expires May 7, 2020                 [Page 10]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
-
       transport-wide feedback makes it more difficult to adapt the
       sending rate, or respond to lost packets, based on the reception
       and/or loss patterns observed on a per-SSRC basis (for example, to
@@ -591,6 +554,14 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    Feedback Message in the table for FMT values for RTPFB Payload Types
    [RFC4585] as defined in Section 3.1:
 
+
+
+
+Sarker, et al.             Expires May 7, 2020                 [Page 10]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
          Name:      CCFB
          Long name: RTP Congestion Control Feedback
          Value:     (to be assigned by IANA)
@@ -610,14 +581,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
    The security considerations of the RTP specification [RFC3550], the
    applicable RTP profile (e.g., [RFC3551], [RFC3711], or [RFC4585]),
    and the RTP congestion control algorithm that is in use (e.g.,
-
-
-
-Sarker, et al.             Expires May 7, 2020                 [Page 11]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
-
    [I-D.ietf-rmcat-nada], [RFC8298], [I-D.ietf-rmcat-gcc], or [RFC8382])
    apply.
 
@@ -646,6 +609,15 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               Description Protocol (SDP)", draft-ietf-mmusic-sdp-bundle-
               negotiation-54 (work in progress), December 2018.
 
+
+
+
+
+Sarker, et al.             Expires May 7, 2020                 [Page 11]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    [I-D.ietf-mmusic-sdp-mux-attributes]
               Nandakumar, S., "A Framework for SDP Attributes when
               Multiplexing", draft-ietf-mmusic-sdp-mux-attributes-17
@@ -666,13 +638,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               of Explicit Congestion Notification (ECN) to IP",
               RFC 3168, DOI 10.17487/RFC3168, September 2001,
               <https://www.rfc-editor.org/info/rfc3168>.
-
-
-
-Sarker, et al.             Expires May 7, 2020                 [Page 12]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
    [RFC3550]  Schulzrinne, H., Casner, S., Frederick, R., and V.
               Jacobson, "RTP: A Transport Protocol for Real-Time
@@ -700,6 +665,15 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               DOI 10.17487/RFC4585, July 2006,
               <https://www.rfc-editor.org/info/rfc4585>.
 
+
+
+
+
+Sarker, et al.             Expires May 7, 2020                 [Page 12]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    [RFC5124]  Ott, J. and E. Carrara, "Extended Secure RTP Profile for
               Real-time Transport Control Protocol (RTCP)-Based Feedback
               (RTP/SAVPF)", RFC 5124, DOI 10.17487/RFC5124, February
@@ -719,16 +693,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               Circuit Breakers for Unicast RTP Sessions", RFC 8083,
               DOI 10.17487/RFC8083, March 2017,
               <https://www.rfc-editor.org/info/rfc8083>.
-
-
-
-
-
-
-Sarker, et al.             Expires May 7, 2020                 [Page 13]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
 12.2.  Informative References
 
@@ -759,6 +723,13 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               Congestion Control Scheme for Real-Time Media", draft-
               ietf-rmcat-nada-13 (work in progress), September 2019.
 
+
+
+Sarker, et al.             Expires May 7, 2020                 [Page 13]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    [RFC5104]  Wenger, S., Chandra, U., Westerlund, M., and B. Burman,
               "Codec Control Messages in the RTP Audio-Visual Profile
               with Feedback (AVPF)", RFC 5104, DOI 10.17487/RFC5104,
@@ -777,14 +748,6 @@ Internet-Draft     Congestion Control Feedback in RTCP     November 2019
               "Shared Bottleneck Detection for Coupled Congestion
               Control for RTP Media", RFC 8382, DOI 10.17487/RFC8382,
               June 2018, <https://www.rfc-editor.org/info/rfc8382>.
-
-
-
-
-Sarker, et al.             Expires May 7, 2020                 [Page 14]
-
-Internet-Draft     Congestion Control Feedback in RTCP     November 2019
-
 
 Authors' Addresses
 
@@ -816,14 +779,51 @@ Authors' Addresses
    URI:   http://www.callstats.io/
 
 
+
+
+Sarker, et al.             Expires May 7, 2020                 [Page 14]
+
+Internet-Draft     Congestion Control Feedback in RTCP     November 2019
+
+
    Michael A. Ramalho
-   Cisco Systems, Inc.
    6310 Watercrest Way Unit 203
-   Lakewood Ranch, FL  34202
+   Lakewood Ranch, FL  34202-5122
    USA
 
-   Phone: +1 919 476 2038
-   Email: mramalho@cisco.com
+   Phone: +1 732 832 9723
+   Email: mar42@cornell.edu
+   URI:   http://ramalho.webhop.info/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
