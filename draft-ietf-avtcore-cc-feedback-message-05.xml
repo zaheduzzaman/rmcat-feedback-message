@@ -520,7 +520,10 @@
           the information needed for a sender based congestion control.  TMMBR
           could, however, be viewed a complementary mechanism that can inform
           the sender of the receiver's current view of acceptable maximum bit
-          rate.</t>
+          rate. The Received Estimated Maximum Bit-rate (REMB) mechanism 
+          <xref target="I-D.alvestrand-rmcat-remb"/> provides similar feedback.
+          </t>
+
 
           <t hangText="RTCP Extended Reports (XR):">Numerous RTCP extended
           report (XR) blocks have been defined to report details of packet
@@ -685,6 +688,8 @@
       <?rfc include="reference.RFC.8382"?>
 
       <?rfc include="reference.I-D.holmer-rmcat-transport-wide-cc-extensions"?>
+
+      <?rfc include="reference.I-D.alvestrand-rmcat-remb"?>
 
       <reference anchor="feedback-requirements"
                  target="://www.ietf.org/proceedings/95/slides/slides-95-rmcat-1.pdf">
