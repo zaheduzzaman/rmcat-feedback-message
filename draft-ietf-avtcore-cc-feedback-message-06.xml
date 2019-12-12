@@ -367,21 +367,20 @@
       Specifications for RTP congestion control algorithms can also provide
       guidance.</t>
 
-      <t>It is a general understanding that the congestion control algorithms
-      will work better with more frequent feedback - per packet feedback.
-      However, RTCP bandwidth and transmission rules put some upper limits on
-      how frequently the RTCP feedback messages can be send from the RTP
-      receiver to the RTP sender. It has been shown <xref
-      target="I-D.ietf-rmcat-rtp-cc-feedback"></xref> that in most cases a per
-      frame feedback is a reasonable assumption on how frequent the RTCP
-      feedback messages can be transmitted. It has also been noted
-      that even if a higher frequency of feedback is desired it is not viable
-      if the feedback messages starts to compete against the RTP traffic on
-      the feedback path during congestion period. Analyzing the feedback
-      interval requirement <xref target="feedback-requirements"></xref> it can
-      be seen that the candidate algorithms can perform with a feedback
-      interval range of 50-200ms. A value within this range need to be
-      negotiated at session setup.</t>
+      <t>It is generally understood that congestion control algorithms work
+      better with more frequent feedback.
+      However, RTCP bandwidth and transmission rules put some upper limits
+      on how frequently the RTCP feedback messages can be sent from an RTP
+      receiver to the RTP sender.
+      It has been shown <xref target="I-D.ietf-rmcat-rtp-cc-feedback"></xref>
+      that in most cases sending feedback one per frame is an upper bound
+      before the reporting overhead becomes excessive. 
+      Analysis <xref target="feedback-requirements"></xref> has also shown
+      that candidate congestion control algorithms can operate with less
+      frequent feedback, using a feedback interval range of 50-200ms.
+      Applications need to negotiate an appropriate feedback interval at
+      session setup.
+    </t>
     </section>
 
     <section title="Response to Loss of Feedback Packets">
