@@ -288,7 +288,7 @@
             <t>
               Arrival time offset (ATO, 13 bits): is the arrival time of
               the RTP packet at the receiver, as an offset before the time
-              represented by the RTS field of this RTCP congestion control
+              represented by the Report Timestamp (RTS) field of this RTCP congestion control
               feedback report. The ATO field is in units of 1/1024 seconds
               (this unit is chosen to give exact offsets from the RTS field)
               so, for example, an ATO value of 512 indicates that the
