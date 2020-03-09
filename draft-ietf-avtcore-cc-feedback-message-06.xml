@@ -373,13 +373,17 @@
       on how frequently the RTCP feedback messages can be sent from an RTP
       receiver to the RTP sender.
       It has been shown <xref target="I-D.ietf-rmcat-rtp-cc-feedback"></xref>
-      that in most cases sending feedback one per frame is an upper bound
-      before the reporting overhead becomes excessive. 
+      that in many cases sending feedback one per frame is an upper bound
+      before the reporting overhead becomes excessive, although this will
+      depend on the media rate and more frequent feedback might be needed
+      with high-rate media flows.
       Analysis <xref target="feedback-requirements"></xref> has also shown
-      that candidate congestion control algorithms can operate with less
+      that some candidate congestion control algorithms can operate with less
       frequent feedback, using a feedback interval range of 50-200ms.
-      Applications need to negotiate an appropriate feedback interval at
-      session setup.
+      Applications need to negotiate an appropriate congestion control
+      feedback interval at session setup time, based on the choice of
+      congestion control algorithm, the expected media bit rate, and
+      the acceptable feedback overhead.
     </t>
     </section>
 
