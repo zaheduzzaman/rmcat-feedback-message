@@ -7,7 +7,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-avtcore-cc-feedback-message-06"
+<rfc category="std" docName="draft-ietf-avtcore-cc-feedback-message-07"
      ipr="trust200902">
   <front>
     <title abbrev="Congestion Control Feedback in RTCP">RTP Control Protocol
