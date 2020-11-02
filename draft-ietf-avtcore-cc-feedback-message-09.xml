@@ -273,8 +273,9 @@
           <list style="symbols">
             <t>
               Received (R, 1 bit): is a boolean to indicate if the packet was
-              received. 0 represents that the packet was not yet received
-              and all the subsequent bits (ECN and ATO) are also set to 0.
+              received. 0 represents that the packet was not yet received and
+              the subsequent 15-bits (ECN and ATO) in this 16-bit packet
+              metric block are also set to 0 and MUST be ignored.
               1 represents that the packet was received and the subsequent
               bits in the block need to be parsed.
             </t>
@@ -322,7 +323,7 @@
         MUST also be reported as received in any overlapping reports sent
         later that cover its sequence number range.
         If reports covering overlapping sequence number ranges are sent,
-        information in later reports updates that in sent previous reports
+        information in later reports updates that sent in previous reports
         for RTP packets included in both reports.
         </t>
 
@@ -534,7 +535,7 @@
           <xref target="RFC6843"/>, and ECN marking <xref target="RFC6679"/>. 
           It is possible to combine several such XR blocks into a compound
           RTCP packet, to report the detailed loss, arrival time, and ECN
-          marking marking information needed for effective sender-based
+          marking information needed for effective sender-based
           congestion control. However, the result has high overhead both
           in terms of bandwidth and complexity, due to the need to stack
           multiple reports.</t>
