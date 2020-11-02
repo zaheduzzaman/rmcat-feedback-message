@@ -398,6 +398,9 @@
       </t>
 
       <t>
+        RTCP packets do not contain a sequence number, so loss of feedback
+        packets has to be inferred based on the time since the last feedback
+        packet.
         If only a single congestion control feedback packet is lost, an
         appropriate response is to assume that the level of congestion
         has remained roughly the same as the previous report. However,
