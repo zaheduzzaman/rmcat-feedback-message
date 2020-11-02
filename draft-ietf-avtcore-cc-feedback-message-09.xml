@@ -488,6 +488,20 @@
         not both, formats in its SDP answer to avoid sending duplicate
         feedback.
       </t>
+
+      <t>
+        When using ECN with RTP, the guidelines in Section 7.2 of 
+        <xref target="RFC6679"/> MUST be followed to initiate the use of ECN in an
+        RTP session. The guidelines in Section 7.3 of <xref target="RFC6679"/>
+        MUST also be followed about ongoing use of ECN within an RTP
+        session, with the exception that feedback is sent using the RTCP
+        Congestion Control Feedback Packets described in this memo rather
+        than using RTP ECN Feedback Packets. Similarly, the guidance
+        in Section 7.4 of <xref target="RFC6679"/> around detecting failures
+        MUST be followed, with the exception that the necessary information is
+        retrieved from the RTCP Congestion Control Feedback Packets rather than
+        from RTP ECN Feedback Packets.
+      </t>
     </section>
 
     <section title="Design Rationale">
@@ -640,9 +654,11 @@
       path. This will negatively impact the quality of experience of that
       receiver, and potentially cause denial of service to other traffic
       sharing the path and excessive resource usage at the media sender.
-      Since RTP is an unreliable transport, a sender can intentionally
-      leave a gap in the RTP sequence number space without causing harm, to
-      check that the receiver is correctly reporting losses.</t>
+      Since RTP is an unreliable transport, a sender can intentionally drop a packet,
+      leaving a gap in the RTP sequence number space without causing serious harm, to
+      check that the receiver is correctly reporting losses (this needs to be done with
+      care and some awareness of the media data being sent, to limit impact on the user
+      experience).</t>
 
       <t>An on-path attacker that can modify RTCP congestion control feedback
       packets can change the reports to trick the sender into sending at either
