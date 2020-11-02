@@ -401,7 +401,7 @@
         appropriate response is to assume that the level of congestion
         has remained roughly the same as the previous report. However,
         if multiple consecutive congestion control feedback packets are
-        lost, then the sender SHOULD rapidly reduce its sending rate as
+        lost, then the media sender SHOULD rapidly reduce its sending rate as
         this likely indicates a path failure. The RTP circuit
         breaker <xref target="RFC8083"/> provides further guidance.
       </t>
@@ -465,7 +465,7 @@
         described in <xref target="RFC6679"/>. That specifies how
         to negotiate the use of ECN with RTP, and defines an RTCP ECN
         Feedback Packet to carry ECN feedback reports. It uses an SDP
-        "a=ecn-capaable-rtp:" attribute to negotiate use of ECN, and
+        "a=ecn-capable-rtp:" attribute to negotiate use of ECN, and
         the "a=rtcp-fb:" attributes with the "nack" parameter "ecn" to
         negotiate the use of RTCP ECN Feedback Packets.
       </t>
