@@ -1,9 +1,12 @@
-VERSION = 07
+PREVIOUS = 08
+VERSION  = 09
 
-DRAFTS = draft-ietf-avtcore-cc-feedback-message-$(VERSION).pdf \
-         draft-ietf-avtcore-cc-feedback-message-$(VERSION).txt 
+BASE   = draft-ietf-avtcore-cc-feedback-message
+DRAFTS = $(BASE)-$(VERSION).pdf \
+         $(BASE)-$(VERSION).txt 
+DIFF   = $(BASE)-$(VERSION)-from-$(PREVIOUS).diff.html
 
-all: $(DRAFTS)
+all: $(DRAFTS) $(DIFF)
 
 %.txt: %.xml
 	@echo "*** generate $< -> $@"
@@ -14,6 +17,10 @@ all: $(DRAFTS)
 %.pdf: %.txt
 	@echo "*** enscript $< -> $@"
 	@enscript -q -lc -f Courier11 -M A4 -p - $< | ps2pdf - $@
+
+$(DIFF): $(BASE)-$(VERSION).txt
+	@echo "*** diff $(BASE)-$(PREVIOUS) -> $(BASE)-$(VERSION)"
+	@rfcdiff --stdout $(BASE)-$(PREVIOUS).txt $(BASE)-$(VERSION).txt > $(DIFF)
 
 clean:
 	-rm -f $(DRAFTS)
