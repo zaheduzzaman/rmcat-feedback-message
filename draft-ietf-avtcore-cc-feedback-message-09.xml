@@ -97,12 +97,18 @@
     <keyword>Congestion control, feedback message, RTP, RTCP</keyword>
 
     <abstract>
-      <t>This document describes an RTCP feedback message intended to enable
-      congestion control for interactive real-time traffic using RTP. The
-      feedback message is designed for use with a sender-based congestion
-      control algorithm, in which the receiver of an RTP flow sends RTCP
-      feedback packets to the sender containing the information the sender
-      needs to perform congestion control.</t>
+      <t>
+        An effective RTP congestion control algorithm requires more fine-grained
+        feedback on packet loss, timing, and ECN marks than is provided by the
+        standard RTP Control Protocol (RTCP) Sender Report (SR) and Receiver
+        Report (RR) packets.
+        This document describes an RTCP feedback message intended to enable
+        congestion control for interactive real-time traffic using RTP. The
+        feedback message is designed for use with a sender-based congestion
+        control algorithm, in which the receiver of an RTP flow sends RTCP
+        feedback packets to the sender containing the information the sender
+        needs to perform congestion control.
+    </t>
     </abstract>
   </front>
 
@@ -669,6 +675,14 @@
       an excessively high or excessively low rate, leading to denial of service.
       The secure RTCP profile <xref target="RFC3711"/> can be used to authenticate
       RTCP packets to protect against this attack.</t>
+
+      <t>An off-patch attacker that can spoof RTCP congestion control feedback
+      packets can similarly trick a sender into sending at an incorrect
+      rate, leading to denial of service.  This attack is difficult, since the
+      attacker needs to guess the SSRC and sequence number in addition to the
+      destination transport address. As with on-patch attacks, the secure RTCP
+      profile <xref target="RFC3711"/> can be used to authenticate RTCP packets
+      to protect against this attack.</t>
     </section>
   </middle>
 
