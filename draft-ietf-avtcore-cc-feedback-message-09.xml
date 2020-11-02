@@ -636,6 +636,7 @@
       Value name:  ccfb
       Long name:   Congestion Control Feedback
       Usable with: ack
+      Mux:         IDENTICAL-PER-PT
       Reference:   (RFC number of this document, when published)
         ]]></artwork>
       </figure>
